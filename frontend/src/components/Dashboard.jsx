@@ -1,0 +1,708 @@
+import ResultCard from "./ResultCard.jsx";
+import ResumeUpload from "./ResumeUpload.jsx";
+
+export const routeSections = [
+  {
+    title: "",
+    items: [{ id: "dashboard", path: "/dashboard", label: "Dashboard", badge: "Da" }]
+  },
+  {
+    title: "Resume Analysis",
+    items: [
+      { id: "resume-checker", path: "/resume-checker", label: "Resume Checker", badge: "Re" },
+      { id: "ats-score", path: "/ats-score", label: "ATS Score", badge: "AT" },
+      { id: "skills-analysis", path: "/skills-analysis", label: "Skills Analysis", badge: "Sk" },
+      { id: "keyword-optimizer", path: "/keyword-optimizer", label: "Keyword Optimizer", badge: "Ke" }
+    ]
+  },
+  {
+    title: "Career Tools",
+    items: [
+      { id: "cover-letter", path: "/cover-letter", label: "Cover Letter", badge: "Co", tag: "New" },
+      { id: "resume-builder", path: "/resume-builder", label: "Resume Builder", badge: "Bu" },
+      { id: "resume-versions", path: "/resume-versions", label: "Resume Versions", badge: "Ve" },
+      { id: "portfolio-analyzer", path: "/portfolio-analyzer", label: "Portfolio Analyzer", badge: "Po" }
+    ]
+  },
+  {
+    title: "Job Preparation",
+    items: [
+      { id: "interview-prep", path: "/interview-prep", label: "Interview Prep", badge: "In" },
+      { id: "career-roadmap", path: "/career-roadmap", label: "Career Roadmap", badge: "Ro" },
+      { id: "learning-hub", path: "/learning-hub", label: "Learning Hub", badge: "Le" }
+    ]
+  },
+  {
+    title: "Job Tracking",
+    items: [
+      { id: "job-match", path: "/job-match", label: "Job Match", badge: "Jo" },
+      { id: "job-tracker", path: "/job-tracker", label: "Job Tracker", badge: "Tr" }
+    ]
+  },
+  {
+    title: "Analytics",
+    items: [
+      { id: "analytics", path: "/analytics", label: "Analytics", badge: "An" },
+      { id: "market-insights", path: "/market-insights", label: "Market Insights", badge: "Ma" }
+    ]
+  },
+  {
+    title: "AI Tools",
+    items: [
+      { id: "ai-assistant", path: "/ai-assistant", label: "AI Assistant", badge: "AI" },
+      { id: "rag-pdf", path: "/rag-pdf", label: "RAG PDF Assistant", badge: "RA", tag: "AI" },
+      { id: "smart-search", path: "/smart-search", label: "Smart Search", badge: "Se" }
+    ]
+  }
+];
+
+export const flatRoutes = routeSections.flatMap((section) => section.items);
+
+export function getRouteByPath(pathname) {
+  return flatRoutes.find((item) => item.path === pathname) || flatRoutes[0];
+}
+
+export default function Dashboard({
+  user,
+  data,
+  forms,
+  resume,
+  outputs,
+  handlers,
+  loading,
+  error,
+  route,
+  onNavigate
+}) {
+  const activeRoute = route || flatRoutes[0];
+  const tasks = data?.tasks || [];
+  const notes = data?.notes || [];
+  const goals = data?.goals || [];
+  const atsScore = resume.result?.score || Math.max(72, data?.score || 87);
+  const matchScore = resume.result?.score ? Math.max(55, Math.round(resume.result.score * 0.78)) : 78;
+  const matched = resume.result?.matchedSkills?.length ? resume.result.matchedSkills : ["JavaScript", "React.js", "Node.js", "Express.js", "MongoDB", "HTML, CSS"];
+  const missing = resume.result?.missingSkills?.length ? resume.result.missingSkills : ["TypeScript", "Next.js", "AWS", "Docker", "GraphQL"];
+  const routeTools = { tasks, notes, goals, atsScore, matchScore, matched, missing };
+
+  function navigateTo(item) {
+    onNavigate(item.path);
+  }
+
+  return (
+    <main className="resume-dashboard">
+      <aside className="resume-sidebar">
+        <button className="brand-mark brand-button" onClick={() => onNavigate("/dashboard")} type="button">
+          <span>AI</span>
+          <strong>Resume Checker</strong>
+        </button>
+
+        <nav className="side-nav">
+          {routeSections.map((section) => (
+            <div className="nav-group" key={section.title || "home"}>
+              {section.title && <p>{section.title}</p>}
+              {section.items.map((item) => (
+                <a
+                  className={activeRoute.id === item.id ? "active" : ""}
+                  href={item.path}
+                  key={item.id}
+                  onClick={(event) => {
+                    event.preventDefault();
+                    navigateTo(item);
+                  }}
+                >
+                  <span>{item.badge}</span>
+                  <strong>{item.label}</strong>
+                  {item.tag && <em>{item.tag}</em>}
+                </a>
+              ))}
+            </div>
+          ))}
+        </nav>
+
+        <div className="upgrade-card">
+          <strong>Upgrade to Premium</strong>
+          <p>Get unlimited scans, AI feedback, cover letters and more.</p>
+          <button onClick={() => onNavigate("/ai-assistant")} type="button">Try AI Tools</button>
+        </div>
+      </aside>
+
+      <section className="resume-main">
+        <header className="resume-topbar">
+          <button className="hamburger" onClick={() => onNavigate("/dashboard")} type="button">☰</button>
+          <div className="top-actions">
+            <label className="upload-action">
+              Upload New Resume
+              <input type="file" accept=".pdf,.doc,.docx,.txt" onChange={(event) => handlers.setResumeFile(event.target.files?.[0] || null)} />
+            </label>
+            <button onClick={() => onNavigate("/resume-checker")} type="button">History</button>
+            <div className="profile-chip">
+              <span>{user.name?.slice(0, 1) || "U"}</span>
+              <div>
+                <strong>{user.name}</strong>
+                <small>{activeRoute.label}</small>
+              </div>
+            </div>
+          </div>
+        </header>
+
+        <PageHeader route={activeRoute} error={error} user={user} />
+        {renderRoutePage(activeRoute.id, routeTools, forms, resume, outputs, handlers, loading, onNavigate)}
+        <footer className="dashboard-footer">© 2026 AI Resume Checker. All rights reserved.</footer>
+      </section>
+    </main>
+  );
+}
+
+function renderRoutePage(routeId, tools, forms, resume, outputs, handlers, loading, navigate) {
+  const { tasks, notes, goals, atsScore, matchScore, matched, missing } = tools;
+
+  const pages = {
+    dashboard: (
+      <>
+        <section className="workspace-summary">
+          <StatCard label="ATS Score" value={`${atsScore}/100`} detail="Current resume health" />
+          <StatCard label="Job Match" value={`${matchScore}%`} detail={resume.jobRole} />
+          <StatCard label="Open Tasks" value={tasks.length || 0} detail="Productivity queue" />
+          <StatCard label="Missing Skills" value={missing.length} detail="To improve" />
+        </section>
+        <section className="analysis-grid page-grid">
+          <AtsScoreCard atsScore={atsScore} />
+          <ResumeSummaryCard matched={matched} missing={missing} />
+          <JobMatchCard matchScore={matchScore} resume={resume} navigate={navigate} />
+          <SuggestionsCard navigate={navigate} />
+        </section>
+      </>
+    ),
+    "resume-checker": (
+      <section className="analysis-grid page-grid">
+        <Card className="wide">
+          <CardTitle title="Upload and Screen Resume" />
+          <ResumeUpload
+            file={resume.file}
+            jobRole={resume.jobRole}
+            loading={resume.loading}
+            onFileChange={handlers.setResumeFile}
+            onRoleChange={handlers.setResumeRole}
+            onSubmit={handlers.screenResume}
+          />
+        </Card>
+        <ResumeSummaryCard matched={matched} missing={missing} />
+        {resume.result && <ResultCard result={resume.result} />}
+      </section>
+    ),
+    "ats-score": (
+      <section className="analysis-grid page-grid">
+        <AtsScoreCard atsScore={atsScore} />
+        <PreviewCard userName="ATS Preview" />
+      </section>
+    ),
+    "skills-analysis": (
+      <section className="analysis-grid page-grid">
+        <SkillsCard matched={matched} missing={missing} navigate={navigate} />
+        <LearningCard missing={missing} />
+      </section>
+    ),
+    "keyword-optimizer": (
+      <section className="analysis-grid page-grid">
+        <KeywordCard matched={matched} navigate={navigate} />
+        <SuggestionsCard navigate={navigate} />
+      </section>
+    ),
+    "cover-letter": <CoverLetterModule navigate={navigate} />,
+    "resume-builder": (
+      <section className="analysis-grid page-grid">
+        <PreviewCard userName="Resume Builder Preview" />
+        <Card>
+          <CardTitle title="Builder Blocks" />
+          <List items={["Professional summary", "Experience bullets", "Skills matrix", "Project highlights"]} />
+        </Card>
+      </section>
+    ),
+    "resume-versions": (
+      <section className="analysis-grid page-grid">
+        <Card className="ai-card">
+          <div className="bot-orb">AI</div>
+          <h3>Resume Versions</h3>
+          <p>Create different versions for frontend, backend, data and product roles.</p>
+          <button onClick={() => navigate("/resume-checker")} type="button">Create New Version</button>
+        </Card>
+        <Card>
+          <CardTitle title="Saved Versions" />
+          <List items={["Software Engineer v1", "Frontend Developer v2", "ATS Optimized Draft"]} />
+        </Card>
+      </section>
+    ),
+    "portfolio-analyzer": (
+      <section className="analysis-grid page-grid">
+        <PortfolioCard navigate={navigate} />
+        <KeywordCard matched={matched} navigate={navigate} />
+      </section>
+    ),
+    "interview-prep": <InterviewModule forms={forms} handlers={handlers} loading={loading} outputs={outputs} />,
+    "career-roadmap": <RoadmapModule />,
+    "learning-hub": <LearningCard missing={missing} />,
+    "job-match": (
+      <section className="analysis-grid page-grid">
+        <JobMatchCard matchScore={matchScore} resume={resume} navigate={navigate} />
+        <SkillsCard matched={matched} missing={missing} navigate={navigate} />
+      </section>
+    ),
+    "job-tracker": <JobTrackerModule />,
+    analytics: (
+      <section className="analysis-grid page-grid">
+        <Card className="wide">
+          <CardTitle title="Analytics" />
+          <div className="analytics-mini">
+            <Metric label="Resume health" value={atsScore} />
+            <Metric label="Job match" value={matchScore} />
+            <Metric label="Task progress" value={Math.min(100, Math.max(30, tasks.length ? 78 : 68))} />
+          </div>
+        </Card>
+        <Card>
+          <CardTitle title="Productivity Score" />
+          <ScoreRing value={Math.min(99, Math.max(50, tasks.length ? 82 : 76))} tone="purple" />
+        </Card>
+      </section>
+    ),
+    "market-insights": <MarketInsightsModule />,
+    "ai-assistant": (
+      <section className="productivity-dock page-modules">
+        <TaskModule forms={forms} handlers={handlers} loading={loading} tasks={tasks} />
+        <BreakdownModule forms={forms} handlers={handlers} loading={loading} outputs={outputs} tasks={tasks} />
+        <PlannerModule forms={forms} handlers={handlers} loading={loading} outputs={outputs} />
+        <NotesModule forms={forms} handlers={handlers} loading={loading} notes={notes} goals={goals} />
+        <GoalModule forms={forms} handlers={handlers} loading={loading} outputs={outputs} />
+      </section>
+    ),
+    "rag-pdf": <PdfModule forms={forms} handlers={handlers} loading={loading} outputs={outputs} />,
+    "smart-search": <SearchModule forms={forms} handlers={handlers} loading={loading} outputs={outputs} />
+  };
+
+  return pages[routeId] || pages.dashboard;
+}
+
+function PageHeader({ route, error, user }) {
+  return (
+    <div className="resume-hero app-heading">
+      <div>
+        <span>{route.label}</span>
+        <h1>{route.label}</h1>
+        <p>Welcome {user.name?.split(" ")[0] || "there"}. This is a dedicated app page at <strong>{route.path}</strong>.</p>
+      </div>
+      {error && <div className="error">{error}</div>}
+    </div>
+  );
+}
+
+function AtsScoreCard({ atsScore }) {
+  return (
+    <Card className="ats-card wide">
+      <CardTitle title="ATS Score" />
+      <div className="ats-layout">
+        <ScoreRing value={atsScore} tone="green" />
+        <div className="score-detail">
+          <h2>Great! Your resume is ATS-friendly</h2>
+          <p>Your resume has a good chance of passing ATS screening. Keep improving to make it perfect.</p>
+          {[["Content Quality", 88], ["Formatting", 85], ["Skills Match", 90], ["Keyword Usage", 82], ["Readability", 87]].map(([label, value]) => (
+            <Metric key={label} label={label} value={value} />
+          ))}
+        </div>
+      </div>
+    </Card>
+  );
+}
+
+function ResumeSummaryCard({ matched, missing }) {
+  return (
+    <Card>
+      <CardTitle title="Resume Summary" />
+      <SummaryRow label="Total Words" value="612" />
+      <SummaryRow label="Total Sections" value="10" />
+      <SummaryRow label="Skills Found" value={matched.length + missing.length} />
+      <SummaryRow label="Experience" value="2.6 Years" />
+      <SummaryRow label="Education" value="B.Tech" />
+      <SummaryRow label="Resume Type" value="Chronological" />
+    </Card>
+  );
+}
+
+function JobMatchCard({ matchScore, resume, navigate }) {
+  return (
+    <Card className="match-card">
+      <CardTitle title="Job Match Score" />
+      <ScoreRing value={matchScore} tone="purple" />
+      <h3>Good Match</h3>
+      <p>This resume matches well with the {resume.jobRole} role.</p>
+      <button onClick={() => navigate("/skills-analysis")} type="button">View Match Details</button>
+    </Card>
+  );
+}
+
+function SkillsCard({ matched, missing, navigate }) {
+  return (
+    <Card className="wide">
+      <CardTitle title="Skills Analysis" />
+      <div className="skills-columns">
+        <div>
+          <h3>Matched Skills</h3>
+          {matched.slice(0, 6).map((skill, index) => (
+            <SkillBar key={skill} skill={skill} value={Math.max(70, 92 - index * 5)} />
+          ))}
+        </div>
+        <div>
+          <h3 className="missing-title">Missing Skills</h3>
+          <ul className="missing-list">
+            {missing.slice(0, 6).map((skill) => <li key={skill}>{skill}</li>)}
+          </ul>
+        </div>
+      </div>
+      <button onClick={() => navigate("/learning-hub")} type="button">Build Learning Plan</button>
+    </Card>
+  );
+}
+
+function KeywordCard({ matched, navigate }) {
+  return (
+    <Card>
+      <CardTitle title="Keyword Optimizer" />
+      <div className="keyword-cloud">
+        {[...matched, "Problem Solving", "GitHub", "Data Structures", "Teamwork"].slice(0, 12).map((keyword) => (
+          <span key={keyword}>{keyword}</span>
+        ))}
+      </div>
+      <button onClick={() => navigate("/smart-search")} type="button">Search Keyword Usage</button>
+    </Card>
+  );
+}
+
+function SuggestionsCard({ navigate }) {
+  return (
+    <Card className="suggestions-card">
+      <CardTitle title="AI Suggestions" />
+      {[["Improve Your Summary", "Add key achievements and strengths.", "High"], ["Add More Technical Skills", "Add TypeScript, Next.js, AWS.", "Medium"], ["Highlight Achievements", "Add measurable impact.", "High"], ["Use Strong Action Verbs", "Use Developed, Implemented, Optimized.", "Low"]].map(([title, copy, tag]) => (
+        <Suggestion key={title} title={title} copy={copy} tag={tag} />
+      ))}
+      <button onClick={() => navigate("/cover-letter")} type="button">Use Suggestions</button>
+    </Card>
+  );
+}
+
+function PreviewCard({ userName }) {
+  return (
+    <Card className="preview-card wide">
+      <CardTitle title={userName} />
+      <div className="preview-layout">
+        <div className="resume-preview-mini">
+          <strong>Aman Verma</strong>
+          <span>Software Developer</span>
+          <i /><i /><i /><i />
+        </div>
+        <ul className="check-list">
+          <li>Text is readable</li>
+          <li>No images or tables detected</li>
+          <li>Proper heading hierarchy</li>
+          <li>ATS-friendly format</li>
+        </ul>
+        <div className="compat-meter">
+          <strong>95%</strong>
+          <span>ATS Compatibility</span>
+        </div>
+      </div>
+    </Card>
+  );
+}
+
+function PortfolioCard({ navigate }) {
+  return (
+    <Card>
+      <CardTitle title="Portfolio Analyzer" />
+      <div className="feature-card-copy">
+        <strong>Portfolio readiness check</strong>
+        <p>Compare projects, GitHub proof, live links and role-fit signals against your target job.</p>
+      </div>
+      <button onClick={() => navigate("/keyword-optimizer")} type="button">Improve Portfolio Keywords</button>
+    </Card>
+  );
+}
+
+function CoverLetterModule({ navigate }) {
+  return (
+    <section className="productivity-dock page-modules">
+      <Module title="Cover Letter Builder">
+        <div className="feature-card-copy">
+          <strong>Generate role-specific cover letters</strong>
+          <p>Uses resume keywords, missing skills and target role to draft a sharper application story.</p>
+        </div>
+        <button onClick={() => navigate("/resume-checker")} type="button">Start from Resume</button>
+      </Module>
+    </section>
+  );
+}
+
+function InterviewModule({ forms, handlers, loading, outputs }) {
+  return (
+    <section className="productivity-dock page-modules">
+      <Module title="Interview Preparation">
+        <form className="stack-form" onSubmit={handlers.createInterview}>
+          <input name="role" value={forms.interview.role} onChange={handlers.changeInterview} placeholder="Target role" />
+          <textarea name="answer" value={forms.interview.answer} onChange={handlers.changeInterview} placeholder="Practice answer for AI feedback" />
+          <button disabled={loading}>Generate Questions</button>
+        </form>
+        <List items={[...outputs.interviewQuestions, outputs.interviewFeedback].filter(Boolean)} />
+      </Module>
+    </section>
+  );
+}
+
+function RoadmapModule() {
+  return (
+    <section className="productivity-dock page-modules">
+      <Module title="Career Roadmap">
+        <div className="feature-card-copy">
+          <strong>Role-based growth path</strong>
+          <p>AI maps your current skills to weekly milestones, projects and interview goals.</p>
+        </div>
+        <List items={["Week 1: close missing keywords", "Week 2: build role project", "Week 3: interview practice"]} />
+      </Module>
+    </section>
+  );
+}
+
+function LearningCard({ missing }) {
+  return (
+    <section className="productivity-dock page-modules">
+      <Module title="Learning Hub">
+        <div className="feature-card-copy">
+          <strong>Personalized learning queue</strong>
+          <p>Converts missing skills into courses, practice tasks and daily study blocks.</p>
+        </div>
+        <List items={missing.slice(0, 4).map((skill) => `Learn ${skill}`)} />
+      </Module>
+    </section>
+  );
+}
+
+function JobTrackerModule() {
+  return (
+    <section className="productivity-dock page-modules">
+      <Module title="Job Tracker">
+        <div className="feature-card-copy">
+          <strong>Application pipeline</strong>
+          <p>Track applied, interview, offer and rejected stages with AI follow-up reminders.</p>
+        </div>
+        <List items={["Applied: 4 roles", "Interview: 2 roles", "Follow-up due: 1 role"]} />
+      </Module>
+    </section>
+  );
+}
+
+function MarketInsightsModule() {
+  return (
+    <section className="productivity-dock page-modules">
+      <Module title="Market Insights">
+        <div className="feature-card-copy">
+          <strong>Role demand signals</strong>
+          <p>Shows target-role skills, salary direction and hiring keywords to optimize applications.</p>
+        </div>
+        <div className="keyword-cloud compact">
+          {["React", "Node.js", "AWS", "TypeScript", "System Design"].map((keyword) => <span key={keyword}>{keyword}</span>)}
+        </div>
+      </Module>
+    </section>
+  );
+}
+
+function TaskModule({ forms, handlers, loading, tasks }) {
+  return (
+    <Module title="AI Task Prioritization">
+      <form className="stack-form" onSubmit={handlers.addTask}>
+        <input name="title" value={forms.task.title} onChange={handlers.changeTask} placeholder="Task title" />
+        <input name="deadline" type="date" value={forms.task.deadline} onChange={handlers.changeTask} />
+        <select name="importance" value={forms.task.importance} onChange={handlers.changeTask}>
+          <option>High</option><option>Medium</option><option>Low</option>
+        </select>
+        <button disabled={loading}>Add Task</button>
+      </form>
+      <List items={tasks.map((task) => `${task.priority}: ${task.title}`)} />
+    </Module>
+  );
+}
+
+function BreakdownModule({ forms, handlers, loading, outputs, tasks }) {
+  return (
+    <Module title="AI Task Breakdown">
+      <div className="stack-form">
+        <select value={forms.breakdownTaskId} onChange={handlers.changeBreakdownTask}>
+          <option value="">Select task to break down</option>
+          {tasks.map((task) => <option key={task.id} value={task.id}>{task.title}</option>)}
+        </select>
+        <button disabled={!forms.breakdownTaskId || loading} onClick={handlers.breakdownSelectedTask} type="button">Generate Subtasks</button>
+      </div>
+      <List items={outputs.subtasks.map((subtask) => subtask.title || subtask)} />
+    </Module>
+  );
+}
+
+function PlannerModule({ forms, handlers, loading, outputs }) {
+  return (
+    <Module title="AI Daily Planner">
+      <form className="stack-form" onSubmit={handlers.createPlanner}>
+        <input name="availableMinutes" type="number" value={forms.planner.availableMinutes} onChange={handlers.changePlanner} />
+        <button disabled={loading}>Create Schedule</button>
+      </form>
+      <List items={outputs.schedule.map((slot) => `${slot.start} - ${slot.title}`)} />
+    </Module>
+  );
+}
+
+function NotesModule({ forms, handlers, loading, notes, goals }) {
+  return (
+    <Module title="AI Notes Summarizer">
+      <form className="stack-form" onSubmit={handlers.addNote}>
+        <input name="title" value={forms.note.title} onChange={handlers.changeNote} placeholder="Notes title" />
+        <textarea name="content" value={forms.note.content} onChange={handlers.changeNote} placeholder="Paste notes text" />
+        <button disabled={loading}>Summarize Notes</button>
+      </form>
+      <List items={[...notes.map((note) => note.summary || note.title), ...goals.map((goal) => `${goal.title} - ${goal.progress}%`)]} />
+    </Module>
+  );
+}
+
+function GoalModule({ forms, handlers, loading, outputs }) {
+  return (
+    <Module title="Goal Tracking">
+      <form className="stack-form" onSubmit={handlers.addGoal}>
+        <input name="title" value={forms.goal.title} onChange={handlers.changeGoal} placeholder="Goal title" />
+        <input name="targetDate" type="date" value={forms.goal.targetDate} onChange={handlers.changeGoal} />
+        <button disabled={loading}>Create Daily Targets</button>
+      </form>
+      <List items={outputs.goalTargets.map((target) => target.title || target)} />
+    </Module>
+  );
+}
+
+function SearchModule({ forms, handlers, loading, outputs }) {
+  return (
+    <section className="productivity-dock page-modules">
+      <Module title="Smart Search">
+        <form className="stack-form" onSubmit={handlers.search}>
+          <input value={forms.search} onChange={handlers.changeSearch} placeholder="Find tasks or notes naturally" />
+          <button disabled={loading}>Search Workspace</button>
+        </form>
+        <List items={outputs.searchResults.map((item) => item.title || item.summary || item.type)} />
+      </Module>
+    </section>
+  );
+}
+
+function PdfModule({ forms, handlers, loading, outputs }) {
+  return (
+    <section className="productivity-dock page-modules">
+      <Module title="RAG PDF Assistant">
+        <form className="stack-form" onSubmit={handlers.askPdf}>
+          <input name="title" value={forms.pdf.title} onChange={handlers.changePdf} placeholder="PDF title" />
+          <textarea name="content" value={forms.pdf.content} onChange={handlers.changePdf} placeholder="Paste extracted PDF content" />
+          <input name="question" value={forms.pdf.question} onChange={handlers.changePdf} placeholder="Ask question from PDF" />
+          <button disabled={loading}>Ask PDF AI</button>
+        </form>
+        <List items={[outputs.pdfAnswer].filter(Boolean)} />
+      </Module>
+    </section>
+  );
+}
+
+function StatCard({ label, value, detail }) {
+  return (
+    <article className="stat-card">
+      <span>{label}</span>
+      <strong>{value}</strong>
+      <p>{detail}</p>
+    </article>
+  );
+}
+
+function Card({ children, className = "" }) {
+  return <section className={`analysis-card ${className}`}>{children}</section>;
+}
+
+function CardTitle({ title }) {
+  return (
+    <div className="card-title">
+      <h2>{title}</h2>
+      <span>i</span>
+    </div>
+  );
+}
+
+function ScoreRing({ value, tone }) {
+  return (
+    <div className={`score-ring ${tone}`} style={{ "--score": `${value * 3.6}deg` }}>
+      <strong>{value}</strong>
+      <span>/100</span>
+    </div>
+  );
+}
+
+function Metric({ label, value }) {
+  return (
+    <div className="metric-row">
+      <span>{label}</span>
+      <i><b style={{ width: `${value}%` }} /></i>
+      <em>{value}/100</em>
+    </div>
+  );
+}
+
+function SummaryRow({ label, value }) {
+  return (
+    <div className="summary-row">
+      <span>{label}</span>
+      <strong>{value}</strong>
+    </div>
+  );
+}
+
+function SkillBar({ skill, value }) {
+  return (
+    <div className="skill-row">
+      <span>{skill}</span>
+      <i><b style={{ width: `${value}%` }} /></i>
+      <em>{value}%</em>
+    </div>
+  );
+}
+
+function Suggestion({ title, copy, tag }) {
+  return (
+    <article className="suggestion">
+      <div>
+        <strong>{title}</strong>
+        <p>{copy}</p>
+      </div>
+      <span className={tag.toLowerCase()}>{tag}</span>
+    </article>
+  );
+}
+
+function Module({ title, children }) {
+  return (
+    <section className="panel module-panel">
+      <div className="module-heading">
+        <span>{title.split(" ").slice(0, 2).map((word) => word[0]).join("")}</span>
+        <h2>{title}</h2>
+      </div>
+      {children}
+    </section>
+  );
+}
+
+function List({ items = [] }) {
+  if (!items.length) return null;
+  return (
+    <ul className="compact-list">
+      {items.map((item) => (
+        <li key={item}>{item}</li>
+      ))}
+    </ul>
+  );
+}
