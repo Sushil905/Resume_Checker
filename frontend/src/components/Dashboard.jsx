@@ -60,47 +60,33 @@ export const flatRoutes = routeSections.flatMap((section) => section.items);
 
 const learningHubSections = [
   {
-    title: "Programming Languages",
-    badge: "PL",
+    title: "Tech",
+    badge: "TC",
     resources: [
       ["Python Docs Tutorial", "Official Python tutorial for fundamentals, data structures and modules.", "https://docs.python.org/3/tutorial/"],
       ["JavaScript MDN Guide", "Modern JavaScript concepts, browser APIs and language reference.", "https://developer.mozilla.org/en-US/docs/Web/JavaScript/Guide"],
       ["Java Tutorials", "Official Oracle Java tutorials for core language and OOP concepts.", "https://dev.java/learn/"],
-      ["Go by Example", "Practical Go examples for syntax, concurrency and standard library usage.", "https://gobyexample.com/"]
-    ]
-  },
-  {
-    title: "DSA & Algorithms",
-    badge: "DS",
-    resources: [
+      ["Go by Example", "Practical Go examples for syntax, concurrency and standard library usage.", "https://gobyexample.com/"],
       ["NeetCode Roadmap", "Structured DSA roadmap with patterns for coding interviews.", "https://neetcode.io/roadmap"],
       ["LeetCode Explore", "Topic-wise practice for arrays, strings, trees, graphs and DP.", "https://leetcode.com/explore/"],
       ["HackerRank Interview Prep", "Interview practice kits for problem solving and data structures.", "https://www.hackerrank.com/interview/interview-preparation-kit"],
-      ["CP-Algorithms", "Algorithm explanations for graph, DP, strings, math and advanced topics.", "https://cp-algorithms.com/"]
-    ]
-  },
-  {
-    title: "Core CS Subjects",
-    badge: "CS",
-    resources: [
+      ["CP-Algorithms", "Algorithm explanations for graph, DP, strings, math and advanced topics.", "https://cp-algorithms.com/"],
       ["Operating Systems: Three Easy Pieces", "Free OS book covering processes, memory, concurrency and persistence.", "https://pages.cs.wisc.edu/~remzi/OSTEP/"],
       ["Computer Networking: A Top-Down Approach", "Companion resources for networking fundamentals and protocols.", "https://gaia.cs.umass.edu/kurose_ross/"],
       ["Database System Concepts", "Database learning resources around SQL, design and transactions.", "https://www.db-book.com/"],
-      ["Nand2Tetris", "Build a computer from logic gates to software for deep CS foundations.", "https://www.nand2tetris.org/"]
-    ]
-  },
-  {
-    title: "Development Tracks",
-    badge: "DV",
-    resources: [
+      ["Nand2Tetris", "Build a computer from logic gates to software for deep CS foundations.", "https://www.nand2tetris.org/"],
       ["roadmap.sh", "Role-based roadmaps for frontend, backend, DevOps, AI and more.", "https://roadmap.sh/"],
       ["MDN Learn Web Development", "Frontend foundations, HTML, CSS, JavaScript and web app basics.", "https://developer.mozilla.org/en-US/docs/Learn"],
       ["freeCodeCamp", "Hands-on full-stack, data, backend and responsive web projects.", "https://www.freecodecamp.org/learn/"],
-      ["Google Cloud Skills Boost", "Practical labs for cloud, AI, DevOps and data engineering.", "https://www.cloudskillsboost.google/"]
+      ["GitHub Skills", "Interactive GitHub courses for portfolio workflows and collaboration.", "https://skills.github.com/"],
+      ["Frontend Mentor", "Realistic frontend projects for UI and portfolio building.", "https://www.frontendmentor.io/challenges"],
+      ["Kaggle Learn", "Data science and ML micro-courses with notebooks and projects.", "https://www.kaggle.com/learn"],
+      ["Build your own X", "Open-source project ideas for building real systems from scratch.", "https://github.com/codecrafters-io/build-your-own-x"],
+      ["Hugging Face Learn", "Open-source machine learning, NLP and transformer learning resources.", "https://huggingface.co/learn"]
     ]
   },
   {
-    title: "Non-Tech Career Paths",
+    title: "Non-Tech",
     badge: "NT",
     resources: [
       ["Business Analyst", "Business analysis standards, role practices and certification path from IIBA.", "https://www.iiba.org/business-analysis-certifications/"],
@@ -150,7 +136,23 @@ const learningHubSections = [
     ]
   },
   {
-    title: "Interview Preparation",
+    title: "Certifications",
+    badge: "CR",
+    resources: [
+      ["Microsoft Learn", "Microsoft certification paths for Azure, data, AI and business apps.", "https://learn.microsoft.com/en-us/training/"],
+      ["AWS Skill Builder", "AWS cloud learning plans, labs and certification preparation.", "https://skillbuilder.aws/"],
+      ["Google Cloud Skills Boost", "Google Cloud certification learning paths and hands-on labs.", "https://www.cloudskillsboost.google/"],
+      ["Cisco Networking Academy", "Networking, cybersecurity and IT certification-aligned learning.", "https://www.netacad.com/"],
+      ["Google Skillshop", "Official Google Ads, Analytics and marketing certification training.", "https://skillshop.withgoogle.com/"],
+      ["HubSpot Academy", "Free certifications for sales, marketing, CRM and content.", "https://academy.hubspot.com/"],
+      ["Meta Blueprint", "Meta certification learning for social media and paid campaigns.", "https://www.facebook.com/business/learn"],
+      ["PMI Learning", "Project management certification resources and professional learning.", "https://www.pmi.org/learning"],
+      ["Google AI Essentials", "Beginner-friendly AI productivity and career upskilling course.", "https://grow.google/ai-essentials/"],
+      ["OpenAI Prompt Engineering Guide", "Prompting patterns for building AI-assisted workflows.", "https://platform.openai.com/docs/guides/prompt-engineering"]
+    ]
+  },
+  {
+    title: "Interview Prep",
     badge: "IP",
     resources: [
       ["Technical Interviews", "Coding interview preparation with algorithms and company-style problems.", "https://leetcode.com/problemset/"],
@@ -159,57 +161,14 @@ const learningHubSections = [
       ["Mock Interviews", "Peer mock interviews for coding, behavioral and product roles.", "https://www.pramp.com/"],
       ["Aptitude", "Quantitative aptitude and placement-style practice questions.", "https://www.indiabix.com/aptitude/questions-and-answers/"],
       ["Reasoning", "Logical reasoning and analytical practice for exams and placements.", "https://www.indiabix.com/logical-reasoning/questions-and-answers/"],
-      ["Communication Skills", "Business communication courses and professional speaking practice.", "https://www.coursera.org/browse/business/business-essentials"]
-    ]
-  },
-  {
-    title: "Certifications",
-    badge: "CR",
-    resources: [
-      ["Microsoft Learn", "Microsoft certification paths for Azure, data, AI and business apps.", "https://learn.microsoft.com/en-us/training/"],
-      ["AWS Skill Builder", "AWS cloud learning plans, labs and certification preparation.", "https://skillbuilder.aws/"],
-      ["Google Cloud Skills Boost", "Google Cloud certification learning paths and hands-on labs.", "https://www.cloudskillsboost.google/"],
-      ["Cisco Networking Academy", "Networking, cybersecurity and IT certification-aligned learning.", "https://www.netacad.com/"]
-    ]
-  },
-  {
-    title: "Placement Prep",
-    badge: "PP",
-    resources: [
+      ["Communication Skills", "Business communication courses and professional speaking practice.", "https://www.coursera.org/browse/business/business-essentials"],
       ["National Career Service", "Government career portal for jobs, counselling and employability resources.", "https://www.ncs.gov.in/"],
       ["HackerRank Jobs and Skills", "Practice coding and skill assessments used in hiring.", "https://www.hackerrank.com/"],
       ["LinkedIn Learning", "Professional courses for business, tech and career growth.", "https://www.linkedin.com/learning/"],
-      ["Google Interview Warmup", "Practice interview answers with AI-assisted prompts.", "https://grow.google/certificates/interview-warmup/"]
-    ]
-  },
-  {
-    title: "Interview Questions",
-    badge: "IQ",
-    resources: [
       ["InterviewBit", "Technical interview questions for programming, DSA and system design.", "https://www.interviewbit.com/"],
       ["LeetCode Interview", "Coding interview questions and company-style practice.", "https://leetcode.com/problemset/"],
       ["Pramp", "Peer mock interviews for coding, product and behavioral practice.", "https://www.pramp.com/"],
       ["STAR Method Guide", "Behavioral interview framework for structured answers.", "https://www.themuse.com/advice/star-interview-method"]
-    ]
-  },
-  {
-    title: "Projects",
-    badge: "PR",
-    resources: [
-      ["GitHub Skills", "Interactive GitHub courses for portfolio workflows and collaboration.", "https://skills.github.com/"],
-      ["Frontend Mentor", "Realistic frontend projects for UI and portfolio building.", "https://www.frontendmentor.io/challenges"],
-      ["Kaggle Learn", "Data science and ML micro-courses with notebooks and projects.", "https://www.kaggle.com/learn"],
-      ["Build your own X", "Open-source project ideas for building real systems from scratch.", "https://github.com/codecrafters-io/build-your-own-x"]
-    ]
-  },
-  {
-    title: "AI Recommendations",
-    badge: "AI",
-    resources: [
-      ["OpenAI Prompt Engineering Guide", "Prompting patterns for building AI-assisted workflows.", "https://platform.openai.com/docs/guides/prompt-engineering"],
-      ["Google AI Essentials", "Beginner-friendly AI productivity and career upskilling course.", "https://grow.google/ai-essentials/"],
-      ["Microsoft AI Learning Hub", "AI learning paths, copilots and responsible AI resources.", "https://learn.microsoft.com/en-us/ai/"],
-      ["Hugging Face Learn", "Open-source machine learning, NLP and transformer learning resources.", "https://huggingface.co/learn"]
     ]
   }
 ];
@@ -1104,7 +1063,7 @@ function LearningCard({ missing, navigate, resume }) {
         <div>
           <span>Job Preparation</span>
           <h2>Learning Hub</h2>
-          <p>Structured resources for programming, DSA, core CS, development, certifications, placement prep, interviews, projects and AI recommendations.</p>
+          <p>Structured resources arranged by Tech, Non-Tech, Sales & Marketing, Government Exams, Certifications and Interview Prep.</p>
           <div className="ats-actions">
             <button onClick={() => navigate("/career-roadmap")} type="button">Build Roadmap</button>
             <button className="ghost-button" onClick={() => navigate("/interview-prep")} type="button">Practice Interview</button>
