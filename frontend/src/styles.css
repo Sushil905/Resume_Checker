@@ -1291,6 +1291,8 @@ button:disabled {
 }
 
 .side-nav a strong {
+  display: grid;
+  gap: 3px;
   min-width: 0;
   color: #dce8ff;
   font-size: 14px;
@@ -1298,6 +1300,15 @@ button:disabled {
   overflow: hidden;
   text-overflow: ellipsis;
   white-space: nowrap;
+}
+
+.side-nav a strong small {
+  color: #7f98ba;
+  font-size: 10px;
+  font-weight: 750;
+  letter-spacing: 0;
+  overflow: hidden;
+  text-overflow: ellipsis;
 }
 
 .side-nav a span {
@@ -1714,6 +1725,13 @@ button:disabled {
     linear-gradient(145deg, rgba(6, 19, 45, 0.95), rgba(2, 9, 25, 0.94));
 }
 
+.job-hero {
+  background:
+    radial-gradient(circle at 88% 18%, rgba(152, 93, 255, 0.18), transparent 28%),
+    radial-gradient(circle at 12% 88%, rgba(57, 194, 255, 0.14), transparent 30%),
+    linear-gradient(145deg, rgba(6, 19, 45, 0.96), rgba(2, 9, 25, 0.94));
+}
+
 .tool-hero span {
   color: #39c2ff;
   font-size: 13px;
@@ -1762,6 +1780,215 @@ button:disabled {
   margin: 0;
   color: #9fb0c6;
   font-size: 13px;
+}
+
+.match-command-card,
+.tracker-score-card {
+  display: grid;
+  place-items: center;
+  align-content: center;
+  gap: 8px;
+  min-height: 230px;
+  border: 1px solid rgba(132, 93, 255, 0.35);
+  border-radius: 10px;
+  background:
+    radial-gradient(circle at 50% 34%, rgba(132, 93, 255, 0.22), transparent 44%),
+    rgba(1, 11, 27, 0.62);
+  box-shadow: inset 0 0 34px rgba(132, 93, 255, 0.12);
+}
+
+.match-command-card strong,
+.tracker-score-card strong {
+  color: #ffffff;
+  font-size: 20px;
+}
+
+.match-command-card span,
+.tracker-score-card span,
+.tracker-score-card p {
+  margin: 0;
+  color: #aebdd3;
+  font-size: 13px;
+}
+
+.tracker-score-card strong {
+  color: #39c2ff;
+  font-size: 58px;
+  line-height: 1;
+}
+
+.job-match-page,
+.job-tracker-page {
+  display: grid;
+  gap: 16px;
+}
+
+.job-intelligence-grid {
+  display: grid;
+  grid-template-columns: repeat(12, minmax(0, 1fr));
+  gap: 16px;
+}
+
+.match-metric-grid {
+  display: grid;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  gap: 12px;
+}
+
+.fit-lane,
+.job-action-grid,
+.priority-gap-list {
+  display: grid;
+  gap: 10px;
+}
+
+.fit-lane {
+  grid-template-columns: repeat(4, minmax(0, 1fr));
+  margin-top: 16px;
+}
+
+.fit-lane button,
+.job-action-grid button,
+.priority-gap-list button,
+.tracker-pipeline button,
+.application-table button {
+  border: 1px solid rgba(36, 128, 255, 0.38);
+  border-radius: 9px;
+  background: rgba(0, 66, 155, 0.18);
+  color: #dce8ff;
+  box-shadow: none;
+  cursor: pointer;
+  text-align: left;
+  transition: border-color 180ms ease, transform 180ms ease, background 180ms ease;
+}
+
+.fit-lane button:hover,
+.job-action-grid button:hover,
+.priority-gap-list button:hover,
+.tracker-pipeline button:hover,
+.application-table button:hover {
+  border-color: #39c2ff;
+  background: rgba(0, 112, 255, 0.26);
+  transform: translateY(-2px);
+}
+
+.fit-lane button {
+  display: grid;
+  gap: 6px;
+  padding: 13px;
+}
+
+.fit-lane button em {
+  display: grid;
+  place-items: center;
+  width: 28px;
+  height: 28px;
+  border-radius: 999px;
+  background: rgba(57, 194, 255, 0.15);
+  color: #72caff;
+  font-style: normal;
+  font-weight: 900;
+}
+
+.fit-lane button strong,
+.job-action-grid button strong,
+.priority-gap-list button strong,
+.application-table button strong {
+  color: #ffffff;
+}
+
+.fit-lane button span,
+.job-action-grid button span,
+.priority-gap-list button span,
+.application-table button em,
+.application-table button small {
+  color: #9fb0c6;
+  font-size: 13px;
+}
+
+.job-action-grid {
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+}
+
+.job-action-grid button,
+.priority-gap-list button {
+  display: grid;
+  gap: 7px;
+  padding: 14px;
+}
+
+.job-action-grid button em {
+  color: #72caff;
+  font-style: normal;
+  font-size: 12px;
+  font-weight: 850;
+}
+
+.tracker-pipeline {
+  display: grid;
+  grid-template-columns: repeat(4, minmax(0, 1fr));
+  gap: 14px;
+}
+
+.tracker-pipeline button {
+  display: grid;
+  gap: 6px;
+  padding: 18px;
+  min-height: 132px;
+  background:
+    radial-gradient(circle at 86% 16%, rgba(57, 194, 255, 0.15), transparent 34%),
+    rgba(0, 66, 155, 0.18);
+}
+
+.tracker-pipeline button strong {
+  color: #39c2ff;
+  font-size: 34px;
+}
+
+.tracker-pipeline button span {
+  color: #ffffff;
+  font-weight: 900;
+}
+
+.tracker-pipeline button em {
+  color: #9fb0c6;
+  font-style: normal;
+  font-size: 13px;
+}
+
+.application-table {
+  display: grid;
+  gap: 10px;
+}
+
+.application-table button {
+  display: grid;
+  grid-template-columns: minmax(0, 1.4fr) 110px minmax(130px, 0.8fr) 70px;
+  gap: 12px;
+  align-items: center;
+  padding: 13px;
+}
+
+.application-table button span {
+  display: grid;
+  gap: 4px;
+}
+
+.application-table button b,
+.application-table button i {
+  justify-self: start;
+  padding: 5px 9px;
+  border-radius: 999px;
+  color: #7fe4ff;
+  background: rgba(57, 194, 255, 0.12);
+  font-size: 12px;
+  font-style: normal;
+}
+
+.application-table button i {
+  color: #22f08a;
+  background: rgba(34, 240, 138, 0.12);
+  font-weight: 900;
 }
 
 .career-workbench {
@@ -2776,7 +3003,10 @@ button:disabled {
   .resource-grid,
   .learning-hub-layout,
   .learning-section-card.personal-plan,
-  .roadmap-timeline {
+  .roadmap-timeline,
+  .fit-lane,
+  .job-action-grid,
+  .tracker-pipeline {
     grid-template-columns: 1fr;
   }
 
@@ -2836,12 +3066,15 @@ button:disabled {
   .skills-columns,
   .ats-report-hero,
   .tool-hero,
+  .job-intelligence-grid,
+  .match-metric-grid,
   .ats-breakdown-row,
   .recommendation-grid,
   .clickable-skill-grid,
   .compact-row,
   .builder-block-grid,
-  .builder-flow button {
+  .builder-flow button,
+  .application-table button {
     grid-template-columns: 1fr;
   }
 

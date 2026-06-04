@@ -35,8 +35,8 @@ export const routeSections = [
   {
     title: "Job Tracking",
     items: [
-      { id: "job-match", path: "/job-match", label: "Job Match", badge: "Jo" },
-      { id: "job-tracker", path: "/job-tracker", label: "Job Tracker", badge: "Tr" }
+      { id: "job-match", path: "/job-match", label: "Job Match", badge: "Jo", tag: "AI", copy: "Role fit, gaps and actions" },
+      { id: "job-tracker", path: "/job-tracker", label: "Job Tracker", badge: "Tr", tag: "CRM", copy: "Pipeline, follow-ups and status" }
     ]
   },
   {
@@ -240,7 +240,10 @@ export default function Dashboard({
                   }}
                 >
                   <span>{item.badge}</span>
-                  <strong>{item.label}</strong>
+                  <strong>
+                    {item.label}
+                    {item.copy && <small>{item.copy}</small>}
+                  </strong>
                   {item.tag && <em>{item.tag}</em>}
                 </a>
               ))}
@@ -337,13 +340,8 @@ function renderRoutePage(routeId, tools, forms, resume, outputs, handlers, loadi
     "interview-prep": <InterviewModule forms={forms} handlers={handlers} loading={loading} outputs={outputs} navigate={navigate} resume={resume} />,
     "career-roadmap": <RoadmapModule navigate={navigate} resume={resume} />,
     "learning-hub": <LearningCard missing={missing} navigate={navigate} resume={resume} />,
-    "job-match": (
-      <section className="analysis-grid page-grid">
-        <JobMatchCard matchScore={matchScore} resume={resume} navigate={navigate} />
-        <SkillsCard matched={matched} missing={missing} navigate={navigate} />
-      </section>
-    ),
-    "job-tracker": <JobTrackerModule />,
+    "job-match": <JobMatchPage matchScore={matchScore} matched={matched} missing={missing} resume={resume} navigate={navigate} />,
+    "job-tracker": <JobTrackerModule navigate={navigate} />,
     analytics: (
       <section className="analysis-grid page-grid">
         <Card className="wide">
@@ -548,6 +546,90 @@ function SkillsCard({ matched, missing, navigate }) {
       </div>
       <button onClick={() => navigate("/learning-hub")} type="button">Build Learning Plan</button>
     </Card>
+  );
+}
+
+function JobMatchPage({ matchScore, matched, missing, resume, navigate }) {
+  const roleFit = Math.min(96, Math.max(matchScore, 72));
+  const marketFit = Math.max(64, roleFit - 8);
+  const keywordFit = Math.min(94, 76 + matched.length * 2);
+  const actionItems = [
+    ["Add Missing Skills", `${missing.slice(0, 3).join(", ") || "Role-specific tools"} need stronger proof.`, "/learning-hub"],
+    ["Tune Resume Keywords", "Mirror job description language in skills, summary and project bullets.", "/keyword-optimizer"],
+    ["Prepare Interview Proof", "Convert matched skills into STAR stories for recruiter screening.", "/interview-prep"]
+  ];
+
+  return (
+    <div className="job-match-page page-grid">
+      <section className="tool-hero job-hero">
+        <div>
+          <span>Job Tracking</span>
+          <h2>AI Job Match Intelligence</h2>
+          <p>Analyze how strongly your resume fits the {resume.jobRole} role, then convert skill gaps into a learning and application plan.</p>
+          <div className="ats-actions">
+            <button onClick={() => navigate("/keyword-optimizer")} type="button">Optimize Resume</button>
+            <button className="ghost-button" onClick={() => navigate("/job-tracker")} type="button">Track This Role</button>
+          </div>
+        </div>
+        <div className="match-command-card">
+          <ScoreRing value={roleFit} tone="purple" />
+          <strong>{roleFit >= 85 ? "Strong Fit" : "Good Fit"}</strong>
+          <span>{resume.jobRole}</span>
+        </div>
+      </section>
+
+      <section className="job-intelligence-grid">
+        <Card className="wide">
+          <CardTitle title="Match Breakdown" />
+          <div className="match-metric-grid">
+            <Metric label="Role fit" value={roleFit} />
+            <Metric label="Keyword coverage" value={keywordFit} />
+            <Metric label="Market readiness" value={marketFit} />
+          </div>
+          <div className="fit-lane">
+            {["Resume Scan", "Skill Mapping", "Keyword Gap", "Apply Ready"].map((step, index) => (
+              <button key={step} onClick={() => navigate(index < 2 ? "/skills-analysis" : "/keyword-optimizer")} type="button">
+                <em>{index + 1}</em>
+                <strong>{step}</strong>
+                <span>{index < 2 ? "Completed signal" : "Recommended next action"}</span>
+              </button>
+            ))}
+          </div>
+        </Card>
+
+        <Card>
+          <CardTitle title="Matched Strengths" />
+          <div className="keyword-cloud compact">
+            {matched.slice(0, 10).map((skill) => <button key={skill} onClick={() => navigate("/skills-analysis")} type="button">{skill}</button>)}
+          </div>
+        </Card>
+
+        <Card>
+          <CardTitle title="Priority Gaps" />
+          <div className="priority-gap-list">
+            {missing.slice(0, 5).map((skill, index) => (
+              <button key={skill} onClick={() => navigate("/learning-hub")} type="button">
+                <strong>{skill}</strong>
+                <span>{index < 2 ? "High hiring impact" : "Add portfolio proof"}</span>
+              </button>
+            ))}
+          </div>
+        </Card>
+
+        <Card className="wide">
+          <CardTitle title="AI Action Plan" />
+          <div className="job-action-grid">
+            {actionItems.map(([title, copy, path]) => (
+              <button key={title} onClick={() => navigate(path)} type="button">
+                <strong>{title}</strong>
+                <span>{copy}</span>
+                <em>Open workflow</em>
+              </button>
+            ))}
+          </div>
+        </Card>
+      </section>
+    </div>
   );
 }
 
@@ -1130,17 +1212,89 @@ function LearningCard({ missing, navigate, resume }) {
   );
 }
 
-function JobTrackerModule() {
+function JobTrackerModule({ navigate }) {
+  const pipeline = [
+    ["Saved", 6, "Resume tailoring pending"],
+    ["Applied", 4, "Waiting for recruiter"],
+    ["Interview", 2, "Prep required"],
+    ["Offer", 1, "Compare package"]
+  ];
+  const applications = [
+    ["Frontend Developer", "TechNova Labs", "Interview", "Today 7:00 PM", "92%"],
+    ["Full Stack Developer", "CloudBridge", "Applied", "Follow up tomorrow", "86%"],
+    ["React Developer", "PixelWorks", "Saved", "Customize resume", "81%"]
+  ];
+
   return (
-    <section className="productivity-dock page-modules">
-      <Module title="Job Tracker">
-        <div className="feature-card-copy">
-          <strong>Application pipeline</strong>
-          <p>Track applied, interview, offer and rejected stages with AI follow-up reminders.</p>
+    <div className="job-tracker-page page-grid">
+      <section className="tool-hero job-hero">
+        <div>
+          <span>Job Tracking</span>
+          <h2>Application Command Center</h2>
+          <p>Manage saved jobs, applications, interviews, follow-ups and resume versions from one professional tracking board.</p>
+          <div className="ats-actions">
+            <button onClick={() => navigate("/job-match")} type="button">Run Job Match</button>
+            <button className="ghost-button" onClick={() => navigate("/cover-letter")} type="button">Generate Cover Letter</button>
+          </div>
         </div>
-        <List items={["Applied: 4 roles", "Interview: 2 roles", "Follow-up due: 1 role"]} />
-      </Module>
-    </section>
+        <div className="tracker-score-card">
+          <strong>13</strong>
+          <span>active opportunities</span>
+          <p>3 need action today</p>
+        </div>
+      </section>
+
+      <section className="tracker-pipeline">
+        {pipeline.map(([label, count, detail]) => (
+          <button key={label} onClick={() => navigate(label === "Interview" ? "/interview-prep" : "/job-match")} type="button">
+            <strong>{count}</strong>
+            <span>{label}</span>
+            <em>{detail}</em>
+          </button>
+        ))}
+      </section>
+
+      <section className="job-intelligence-grid">
+        <Card className="wide">
+          <CardTitle title="Tracked Applications" />
+          <div className="application-table">
+            {applications.map(([role, company, stage, nextStep, score]) => (
+              <button key={`${company}-${role}`} onClick={() => navigate(stage === "Interview" ? "/interview-prep" : "/job-match")} type="button">
+                <span>
+                  <strong>{role}</strong>
+                  <em>{company}</em>
+                </span>
+                <b>{stage}</b>
+                <small>{nextStep}</small>
+                <i>{score}</i>
+              </button>
+            ))}
+          </div>
+        </Card>
+
+        <Card>
+          <CardTitle title="AI Follow-Ups" />
+          <div className="priority-gap-list">
+            {["Send recruiter follow-up", "Prepare project walkthrough", "Update resume for React role"].map((item, index) => (
+              <button key={item} onClick={() => navigate(index === 1 ? "/interview-prep" : "/resume-builder")} type="button">
+                <strong>{item}</strong>
+                <span>{index === 0 ? "Due today" : "Recommended action"}</span>
+              </button>
+            ))}
+          </div>
+        </Card>
+
+        <Card>
+          <CardTitle title="Tracker Insights" />
+          <ul className="ats-checklist">
+            <li className="pass">Interview conversion is improving</li>
+            <li className="warn">2 saved jobs need custom resume</li>
+            <li className="warn">1 follow-up is due today</li>
+            <li className="pass">Best match role: Frontend Developer</li>
+          </ul>
+        </Card>
+      </section>
+    </div>
   );
 }
 
