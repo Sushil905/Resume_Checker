@@ -191,6 +191,16 @@ export function getRouteByPath(pathname) {
   return flatRoutes.find((item) => item.path === pathname) || flatRoutes[0];
 }
 
+function downloadReport(fileName, lines) {
+  const blob = new Blob([lines.join("\n")], { type: "text/plain;charset=utf-8" });
+  const url = URL.createObjectURL(blob);
+  const link = document.createElement("a");
+  link.href = url;
+  link.download = fileName;
+  link.click();
+  URL.revokeObjectURL(url);
+}
+
 export default function Dashboard({
   user,
   data,
@@ -402,6 +412,21 @@ function AtsReportPage({ atsScore, matched, missing, resume, navigate }) {
           <div className="ats-actions">
             <button onClick={() => navigate("/resume-checker")} type="button">Upload New Resume</button>
             <button className="ghost-button" onClick={() => navigate("/keyword-optimizer")} type="button">Optimize Keywords</button>
+            <button
+              className="ghost-button"
+              onClick={() => downloadReport("ats-report.txt", [
+                "AI Resume Checker - ATS Report",
+                `Target role: ${resume.jobRole}`,
+                `ATS score: ${atsScore}/100`,
+                `Pass probability: ${passChance}%`,
+                `Matched skills: ${matched.join(", ") || "Not available"}`,
+                `Missing skills: ${missing.join(", ") || "None"}`,
+                "Recommendation: add measurable achievements, role keywords, and ATS-friendly formatting."
+              ])}
+              type="button"
+            >
+              Download Report
+            </button>
           </div>
         </div>
         <div className="ats-score-panel">
@@ -547,6 +572,21 @@ function JobMatchPage({ matchScore, matched, missing, resume, navigate }) {
           <div className="ats-actions">
             <button onClick={() => navigate("/keyword-optimizer")} type="button">Optimize Resume</button>
             <button className="ghost-button" onClick={() => navigate("/job-tracker")} type="button">Track This Role</button>
+            <button
+              className="ghost-button"
+              onClick={() => downloadReport("job-match-report.txt", [
+                "AI Resume Checker - Job Match Report",
+                `Target role: ${resume.jobRole}`,
+                `Role fit: ${roleFit}%`,
+                `Keyword coverage: ${keywordFit}%`,
+                `Market readiness: ${marketFit}%`,
+                `Matched strengths: ${matched.join(", ") || "Not available"}`,
+                `Priority gaps: ${missing.join(", ") || "None"}`
+              ])}
+              type="button"
+            >
+              Export Match
+            </button>
           </div>
         </div>
         <div className="match-command-card">
@@ -968,6 +1008,28 @@ function ResumeVersionsPage({ resume, navigate }) {
           </article>
         ))}
       </section>
+
+      <section className="analysis-grid">
+        <Card className="wide">
+          <CardTitle title="Version Compare" />
+          <div className="compare-table">
+            {[
+              ["ATS Score", "87", "82", "Primary resume has stronger keyword balance."],
+              ["Keyword Match", "High", "Medium", "Frontend version needs TypeScript and testing keywords."],
+              ["Project Proof", "Medium", "High", "Frontend version has better portfolio proof."],
+              ["Best Use", "General software roles", "React/UI roles", "Choose based on job description."]
+            ].map(([metric, primary, focused, insight]) => (
+              <div key={metric}>
+                <strong>{metric}</strong>
+                <span>{primary}</span>
+                <span>{focused}</span>
+                <em>{insight}</em>
+              </div>
+            ))}
+          </div>
+          <button onClick={() => navigate("/ats-score")} type="button">Open ATS Comparison</button>
+        </Card>
+      </section>
     </div>
   );
 }
@@ -1271,6 +1333,22 @@ function JobTrackerModule({ navigate }) {
             <li className="pass">Best match role: Frontend Developer</li>
           </ul>
         </Card>
+
+        <Card className="wide">
+          <CardTitle title="Smart Reminders" />
+          <div className="reminder-strip">
+            {[
+              ["Today", "Send follow-up to TechNova recruiter", "/cover-letter"],
+              ["Tomorrow", "Customize resume for CloudBridge", "/resume-builder"],
+              ["This week", "Practice 2 interview answers", "/interview-prep"]
+            ].map(([when, copy, path]) => (
+              <button key={copy} onClick={() => navigate(path)} type="button">
+                <strong>{when}</strong>
+                <span>{copy}</span>
+              </button>
+            ))}
+          </div>
+        </Card>
       </section>
     </div>
   );
@@ -1290,6 +1368,12 @@ function AnalyticsPage({ atsScore, goals, matchScore, navigate, notes, tasks }) 
     ["Roles Matched", 8, "High-fit opportunities identified"],
     ["Applications Sent", 4, "Tracked in pipeline"],
     ["Interviews", 2, "Practice and feedback needed"]
+  ];
+  const trends = [
+    ["ATS Momentum", atsScore, "+8 this month"],
+    ["Applications", 68, "4 active roles"],
+    ["Interview Prep", 74, "2 sessions due"],
+    ["Learning Progress", completionScore, `${goals.length || 1} goals tracked`]
   ];
 
   return (
@@ -1354,6 +1438,32 @@ function AnalyticsPage({ atsScore, goals, matchScore, navigate, notes, tasks }) 
                 <em>{copy}</em>
               </button>
             ))}
+          </div>
+        </Card>
+
+        <Card className="wide">
+          <CardTitle title="Progress Charts" />
+          <div className="chart-board">
+            {trends.map(([label, value, note]) => (
+              <div className="chart-row" key={label}>
+                <div>
+                  <strong>{label}</strong>
+                  <span>{note}</span>
+                </div>
+                <i><b style={{ width: `${value}%` }} /></i>
+                <em>{value}%</em>
+              </div>
+            ))}
+          </div>
+        </Card>
+
+        <Card>
+          <CardTitle title="Admin Overview" />
+          <div className="admin-mini-grid">
+            <span><strong>{tasks.length || 0}</strong> Tasks</span>
+            <span><strong>{notes.length || 0}</strong> Notes</span>
+            <span><strong>{goals.length || 0}</strong> Goals</span>
+            <span><strong>{Math.max(1, tasks.length + notes.length + goals.length)}</strong> Activities</span>
           </div>
         </Card>
       </section>
@@ -1563,6 +1673,21 @@ function AIAssistantPage({ forms, goals, handlers, loading, navigate, notes, out
       </section>
 
       <section className="ai-workbench-grid">
+        <Card className="wide ai-chat-card">
+          <CardTitle title="Ask AI Assistant" />
+          <div className="ai-chat-window">
+            {(outputs.aiMessages || []).map((message, index) => (
+              <div className={`ai-message ${message.role}`} key={`${message.role}-${index}`}>
+                <strong>{message.role === "user" ? "You" : "AI Assistant"}</strong>
+                <p>{message.text}</p>
+              </div>
+            ))}
+          </div>
+          <form className="stack-form ai-chat-form" onSubmit={handlers.sendAssistantMessage}>
+            <input value={forms.chat || ""} onChange={handlers.changeChat} placeholder="Ask anything: resume, PDF, goals, tasks, interviews..." />
+            <button disabled={loading}>Send to AI</button>
+          </form>
+        </Card>
         <TaskModule forms={forms} handlers={handlers} loading={loading} tasks={tasks} />
         <BreakdownModule forms={forms} handlers={handlers} loading={loading} outputs={outputs} tasks={tasks} />
         <PlannerModule forms={forms} handlers={handlers} loading={loading} outputs={outputs} />

@@ -2056,6 +2056,159 @@ button:disabled {
   grid-column: span 4;
 }
 
+.ai-chat-card {
+  align-content: start;
+}
+
+.ai-chat-window {
+  display: grid;
+  gap: 10px;
+  max-height: 320px;
+  overflow: auto;
+  padding: 12px;
+  border: 1px solid rgba(36, 128, 255, 0.28);
+  border-radius: 10px;
+  background: rgba(1, 11, 27, 0.48);
+}
+
+.ai-message {
+  display: grid;
+  gap: 5px;
+  max-width: 84%;
+  padding: 11px 12px;
+  border: 1px solid rgba(36, 128, 255, 0.32);
+  border-radius: 9px;
+  background: rgba(0, 66, 155, 0.18);
+}
+
+.ai-message.user {
+  justify-self: end;
+  border-color: rgba(34, 240, 138, 0.32);
+  background: rgba(34, 240, 138, 0.1);
+}
+
+.ai-message strong {
+  color: #7fe4ff;
+  font-size: 12px;
+}
+
+.ai-message p {
+  margin: 0;
+  color: #dce8ff;
+  line-height: 1.5;
+}
+
+.ai-chat-form {
+  grid-template-columns: minmax(0, 1fr) auto;
+  margin-top: 12px;
+}
+
+.chart-board,
+.compare-table,
+.reminder-strip,
+.admin-mini-grid {
+  display: grid;
+  gap: 10px;
+}
+
+.chart-row {
+  display: grid;
+  grid-template-columns: minmax(0, 0.8fr) minmax(160px, 1fr) 54px;
+  gap: 12px;
+  align-items: center;
+  padding: 12px;
+  border: 1px solid rgba(36, 128, 255, 0.3);
+  border-radius: 9px;
+  background: rgba(0, 66, 155, 0.14);
+}
+
+.chart-row div {
+  display: grid;
+  gap: 3px;
+}
+
+.chart-row strong,
+.compare-table strong,
+.reminder-strip strong,
+.admin-mini-grid strong {
+  color: #ffffff;
+}
+
+.chart-row span,
+.compare-table span,
+.compare-table em,
+.reminder-strip span {
+  color: #9fb0c6;
+  font-size: 13px;
+  font-style: normal;
+}
+
+.chart-row i {
+  height: 10px;
+  overflow: hidden;
+  border-radius: 999px;
+  background: rgba(41, 72, 118, 0.8);
+}
+
+.chart-row b {
+  display: block;
+  height: 100%;
+  border-radius: inherit;
+  background: linear-gradient(90deg, #238dff, #22f08a);
+}
+
+.chart-row em {
+  color: #7fe4ff;
+  font-style: normal;
+  font-weight: 900;
+}
+
+.admin-mini-grid {
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+}
+
+.admin-mini-grid span {
+  display: grid;
+  gap: 4px;
+  padding: 12px;
+  border: 1px solid rgba(36, 128, 255, 0.3);
+  border-radius: 9px;
+  color: #9fb0c6;
+  background: rgba(0, 66, 155, 0.14);
+}
+
+.admin-mini-grid strong {
+  font-size: 24px;
+}
+
+.compare-table div {
+  display: grid;
+  grid-template-columns: 150px 110px 110px minmax(0, 1fr);
+  gap: 12px;
+  align-items: center;
+  padding: 12px;
+  border: 1px solid rgba(36, 128, 255, 0.3);
+  border-radius: 9px;
+  background: rgba(0, 66, 155, 0.14);
+}
+
+.reminder-strip {
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+}
+
+.reminder-strip button {
+  display: grid;
+  gap: 6px;
+  min-height: 88px;
+  padding: 13px;
+  border: 1px solid rgba(36, 128, 255, 0.38);
+  border-radius: 9px;
+  background: rgba(0, 66, 155, 0.18);
+  color: #dce8ff;
+  box-shadow: none;
+  text-align: left;
+}
+
 .analytics-kpi-grid {
   display: grid;
   grid-template-columns: repeat(4, minmax(0, 1fr));
@@ -3332,7 +3485,8 @@ button:disabled {
   .tracker-pipeline,
   .analytics-kpi-grid,
   .analytics-funnel,
-  .ai-command-grid {
+  .ai-command-grid,
+  .reminder-strip {
     grid-template-columns: 1fr;
   }
 
@@ -3405,7 +3559,10 @@ button:disabled {
   .compact-row,
   .builder-block-grid,
   .builder-flow button,
-  .application-table button {
+  .application-table button,
+  .ai-chat-form,
+  .chart-row,
+  .compare-table div {
     grid-template-columns: 1fr;
   }
 

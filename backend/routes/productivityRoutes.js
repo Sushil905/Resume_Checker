@@ -1,6 +1,7 @@
 import express from "express";
 import {
   breakdownTask,
+  chatWithAssistant,
   createGoal,
   createInterviewSession,
   createNote,
@@ -29,6 +30,7 @@ router.post("/notes", createNote);
 router.post("/goals", createGoal);
 router.get("/search", smartSearch);
 router.get("/score", getScore);
+router.post("/assistant/chat", chatWithAssistant);
 router.post("/interview", createInterviewSession);
 router.post("/pdf/upload", uploadResume.single("document"), extractPdfDocument);
 router.post("/pdf", createPdfDocument);

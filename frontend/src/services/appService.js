@@ -73,3 +73,8 @@ export async function uploadPdfDocument(file) {
   const { data } = await api.post("/productivity/pdf/upload", form);
   return data;
 }
+
+export async function chatWithAssistant(message) {
+  const { data } = await api.post("/productivity/assistant/chat", { message });
+  return data;
+}

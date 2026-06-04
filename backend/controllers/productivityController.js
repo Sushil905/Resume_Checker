@@ -5,6 +5,7 @@ import { db } from "../config/db.js";
 import {
   answerFromDocument,
   breakTaskIntoSubtasks,
+  buildAssistantReply,
   buildDailySchedule,
   calculateProductivityScore,
   divideGoal,
@@ -185,7 +186,49 @@ export async function smartSearch(req, res, next) {
       "SELECT id, title, summary AS description, 'note' AS type FROM notes WHERE user_id = ? AND (title LIKE ? OR content LIKE ? OR summary LIKE ?) LIMIT 10",
       [req.user.id, q, q, q]
     );
-    res.json({ results: [...tasks, ...notes] });
+    const [goals] = await db.execute(
+      "SELECT id, title, CONCAT('Progress: ', progress, '%') AS description, 'goal' AS type FROM goals WHERE user_id = ? AND title LIKE ? LIMIT 10",
+      [req.user.id, q]
+    );
+    const [pdfs] = await db.execute(
+      "SELECT id, title, summary AS description, 'pdf' AS type FROM pdf_documents WHERE user_id = ? AND (title LIKE ? OR content LIKE ? OR summary LIKE ?) LIMIT 10",
+      [req.user.id, q, q, q]
+    );
+    res.json({ results: [...tasks, ...notes, ...goals, ...pdfs] });
+  } catch (error) {
+    next(error);
+  }
+}
+
+export async function chatWithAssistant(req, res, next) {
+  try {
+    const { message = "" } = req.body;
+    const [tasks] = await db.execute(
+      "SELECT title, priority, status, deadline FROM tasks WHERE user_id = ? ORDER BY created_at DESC LIMIT 8",
+      [req.user.id]
+    );
+    const [notes] = await db.execute(
+      "SELECT title, summary FROM notes WHERE user_id = ? ORDER BY created_at DESC LIMIT 5",
+      [req.user.id]
+    );
+    const [goals] = await db.execute(
+      "SELECT title, progress FROM goals WHERE user_id = ? ORDER BY created_at DESC LIMIT 5",
+      [req.user.id]
+    );
+    const [pdfDocuments] = await db.execute(
+      "SELECT title, summary FROM pdf_documents WHERE user_id = ? ORDER BY created_at DESC LIMIT 3",
+      [req.user.id]
+    );
+
+    res.json({
+      answer: buildAssistantReply({ message, tasks, notes, goals, pdfDocuments }),
+      context: {
+        tasks: tasks.length,
+        notes: notes.length,
+        goals: goals.length,
+        pdfDocuments: pdfDocuments.length
+      }
+    });
   } catch (error) {
     next(error);
   }

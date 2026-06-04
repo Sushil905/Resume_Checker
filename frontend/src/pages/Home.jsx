@@ -3,6 +3,7 @@ import AuthPanel from "../components/AuthPanel.jsx";
 import Dashboard, { getRouteByPath } from "../components/Dashboard.jsx";
 import {
   breakdownTask,
+  chatWithAssistant,
   createGoal,
   createInterview,
   createNote,
@@ -40,6 +41,7 @@ export default function Home() {
   const [noteForm, setNoteForm] = useState({ title: "", content: "" });
   const [goalForm, setGoalForm] = useState({ title: "", targetDate: "" });
   const [searchQuery, setSearchQuery] = useState("");
+  const [chatQuery, setChatQuery] = useState("");
   const [interviewForm, setInterviewForm] = useState({ role: "Software Engineer", answer: "" });
   const [pdfForm, setPdfForm] = useState({ title: "", content: "", question: "" });
   const [pdfUpload, setPdfUpload] = useState({ file: null, status: "" });
@@ -50,7 +52,10 @@ export default function Home() {
     goalTargets: [],
     interviewQuestions: [],
     interviewFeedback: "",
-    pdfAnswer: ""
+    pdfAnswer: "",
+    aiMessages: [
+      { role: "assistant", text: "Hi, ask me about your resume, tasks, PDFs, goals, interviews, or job search plan." }
+    ]
   });
 
   const [resumeFile, setResumeFile] = useState(null);
@@ -184,6 +189,26 @@ export default function Home() {
     });
   }
 
+  async function sendAssistantMessage(event) {
+    event.preventDefault();
+    const message = chatQuery.trim();
+    if (!message) return;
+
+    setOutputs((current) => ({
+      ...current,
+      aiMessages: [...current.aiMessages, { role: "user", text: message }]
+    }));
+    setChatQuery("");
+
+    await runAction(async () => {
+      const response = await chatWithAssistant(message);
+      setOutputs((current) => ({
+        ...current,
+        aiMessages: [...current.aiMessages, { role: "assistant", text: response.answer }]
+      }));
+    });
+  }
+
   async function prepareInterview(event) {
     event.preventDefault();
     await runAction(async () => {
@@ -277,6 +302,7 @@ export default function Home() {
         note: noteForm,
         goal: goalForm,
         search: searchQuery,
+        chat: chatQuery,
         interview: interviewForm,
         pdf: pdfForm
       }}
@@ -302,6 +328,8 @@ export default function Home() {
         changeGoal: (event) => setGoalForm({ ...goalForm, [event.target.name]: event.target.value }),
         search,
         changeSearch: (event) => setSearchQuery(event.target.value),
+        sendAssistantMessage,
+        changeChat: (event) => setChatQuery(event.target.value),
         createInterview: prepareInterview,
         changeInterview: (event) => setInterviewForm({ ...interviewForm, [event.target.name]: event.target.value }),
         askPdf,

@@ -105,6 +105,51 @@ export function answerFromDocument(content, question) {
     : "I could not find a strong answer in the uploaded text yet.";
 }
 
+export function buildAssistantReply({ message = "", tasks = [], notes = [], goals = [], pdfDocuments = [] }) {
+  const cleanMessage = message.trim();
+  const lower = cleanMessage.toLowerCase();
+  const pendingTasks = tasks.filter((task) => task.status !== "Completed");
+  const highPriority = pendingTasks.filter((task) => task.priority === "High");
+  const latestNote = notes[0];
+  const latestGoal = goals[0];
+  const latestPdf = pdfDocuments[0];
+
+  if (!cleanMessage) {
+    return "Ask me about your resume, tasks, goals, notes, PDFs, interview prep, or job search plan.";
+  }
+
+  if (/task|priority|today|plan|schedule/.test(lower)) {
+    const focus = highPriority[0] || pendingTasks[0];
+    return focus
+      ? `Start with "${focus.title}" because it is marked ${focus.priority}. After that, create subtasks and block focused time in the daily planner.`
+      : "You do not have pending tasks yet. Add a goal or task and I can prioritize it into a daily plan.";
+  }
+
+  if (/goal|roadmap|progress/.test(lower)) {
+    return latestGoal
+      ? `Your latest goal is "${latestGoal.title}" at ${latestGoal.progress || 0}% progress. Break it into daily targets, then review progress every evening.`
+      : "Add a career goal first, and I will divide it into daily targets with progress tracking.";
+  }
+
+  if (/note|summary|summarize/.test(lower)) {
+    return latestNote
+      ? `Your latest note says: ${latestNote.summary || latestNote.title}. Convert the key points into tasks so they do not stay passive.`
+      : "Paste notes in the Notes Summarizer and I will extract key points plus action items.";
+  }
+
+  if (/pdf|document|rag/.test(lower)) {
+    return latestPdf
+      ? `I found "${latestPdf.title}". Ask a specific question from that PDF for the strongest document-grounded answer.`
+      : "Upload a PDF/DOCX/TXT in RAG PDF Assistant first, then ask a precise question from the document.";
+  }
+
+  if (/resume|ats|job|interview|skill/.test(lower)) {
+    return "For resume improvement: optimize missing keywords, add measurable project impact, keep ATS-friendly formatting, then practice interview stories using STAR format.";
+  }
+
+  return `Here is a practical next step: turn "${cleanMessage}" into one task, one measurable outcome, and one deadline. I can then prioritize it and build a daily plan.`;
+}
+
 function inferActionItems(content) {
   const sentences = splitSentences(content);
   return sentences
