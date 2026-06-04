@@ -1,5 +1,5 @@
 export const roleCategories = {
-  Tech: [
+  Technology: [
     "Software Engineer",
     "Frontend Developer",
     "Backend Developer",
@@ -32,7 +32,7 @@ export const roleCategories = {
     "Blockchain Developer",
     "Embedded Engineer"
   ],
-  "Non Tech": [
+  "Non-Technology": [
     "Business Analyst",
     "Product Manager",
     "Project Manager",
@@ -55,7 +55,7 @@ export const roleCategories = {
     "Accountant",
     "Auditor"
   ],
-  "Sales and Marketing": [
+  "Sales & Marketing": [
     "Sales Executive",
     "Sales Manager",
     "Business Development Executive",
@@ -73,10 +73,32 @@ export const roleCategories = {
     "Email Marketing Specialist",
     "Market Research Analyst",
     "Advertising Specialist"
+  ],
+  "Freshers & Internships": [
+    "Graduate Engineer Trainee (GET)",
+    "Management Trainee",
+    "Software Trainee",
+    "Internship",
+    "Data Analyst Intern",
+    "AI/ML Intern",
+    "Frontend Intern",
+    "Backend Intern",
+    "Full Stack Intern",
+    "Business Analyst Intern"
+  ],
+  Government: [
+    "UPSC Aspirant",
+    "SSC Aspirant",
+    "Banking Aspirant",
+    "Police Services",
+    "Railway Jobs",
+    "State Government Jobs",
+    "Teaching Jobs",
+    "Public Sector Undertaking (PSU)"
   ]
 };
 
-export const defaultRoleCategory = "Tech";
+export const defaultRoleCategory = "Technology";
 export const defaultRole = roleCategories[defaultRoleCategory][0];
 
 export default function ResumeUpload({
@@ -102,7 +124,7 @@ export default function ResumeUpload({
     <form className="panel upload-form" onSubmit={onSubmit}>
       <div className="role-picker">
         <label>
-          Resume category
+          Role Category
           <select value={roleCategory} onChange={handleCategoryChange}>
             {Object.keys(roleCategories).map((category) => (
               <option key={category} value={category}>

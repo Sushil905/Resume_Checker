@@ -111,6 +111,30 @@ SALES_MARKETING_ROLES = {
     "Advertising Specialist",
 }
 
+FRESHER_ROLES = {
+    "Graduate Engineer Trainee (GET)",
+    "Management Trainee",
+    "Software Trainee",
+    "Internship",
+    "Data Analyst Intern",
+    "AI/ML Intern",
+    "Frontend Intern",
+    "Backend Intern",
+    "Full Stack Intern",
+    "Business Analyst Intern",
+}
+
+GOVERNMENT_ROLES = {
+    "UPSC Aspirant",
+    "SSC Aspirant",
+    "Banking Aspirant",
+    "Police Services",
+    "Railway Jobs",
+    "State Government Jobs",
+    "Teaching Jobs",
+    "Public Sector Undertaking (PSU)",
+}
+
 CATEGORY_SKILLS = {
     "tech": {
         "project",
@@ -148,6 +172,30 @@ CATEGORY_SKILLS = {
         "customer",
         "revenue",
     },
+    "freshers": {
+        "internship",
+        "project",
+        "training",
+        "communication",
+        "problem solving",
+        "teamwork",
+        "learning",
+        "academic",
+        "certification",
+        "presentation",
+    },
+    "government": {
+        "general knowledge",
+        "current affairs",
+        "reasoning",
+        "aptitude",
+        "public administration",
+        "teaching",
+        "law",
+        "policy",
+        "discipline",
+        "communication",
+    },
 }
 
 
@@ -164,6 +212,10 @@ def get_role_skills(job_role):
         return CATEGORY_SKILLS["non_tech"]
     if job_role in SALES_MARKETING_ROLES:
         return CATEGORY_SKILLS["sales_marketing"]
+    if job_role in FRESHER_ROLES:
+        return CATEGORY_SKILLS["freshers"]
+    if job_role in GOVERNMENT_ROLES:
+        return CATEGORY_SKILLS["government"]
     return ROLE_SKILLS["Software Engineer"]
 
 
