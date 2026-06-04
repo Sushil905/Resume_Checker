@@ -1663,7 +1663,8 @@ button:disabled {
 }
 
 .skill-report,
-.keyword-report {
+.keyword-report,
+.career-tool-page {
   display: grid;
   gap: 16px;
 }
@@ -1697,6 +1698,12 @@ button:disabled {
 .keyword-hero {
   background:
     radial-gradient(circle at 84% 20%, rgba(152, 93, 255, 0.18), transparent 30%),
+    linear-gradient(145deg, rgba(6, 19, 45, 0.95), rgba(2, 9, 25, 0.94));
+}
+
+.career-hero {
+  background:
+    radial-gradient(circle at 84% 20%, rgba(255, 196, 107, 0.12), transparent 30%),
     linear-gradient(145deg, rgba(6, 19, 45, 0.95), rgba(2, 9, 25, 0.94));
 }
 
@@ -1748,6 +1755,142 @@ button:disabled {
   margin: 0;
   color: #9fb0c6;
   font-size: 13px;
+}
+
+.career-workbench {
+  display: grid;
+  grid-template-columns: minmax(0, 1.5fr) minmax(220px, 0.75fr) minmax(240px, 0.85fr);
+  gap: 16px;
+}
+
+.builder-flow,
+.builder-block-grid,
+.option-stack {
+  display: grid;
+  gap: 10px;
+}
+
+.builder-flow button,
+.builder-block-grid button,
+.option-stack button {
+  border: 1px solid rgba(36, 128, 255, 0.4);
+  border-radius: 9px;
+  background: rgba(0, 66, 155, 0.2);
+  color: #dce8ff;
+  box-shadow: none;
+  text-align: left;
+}
+
+.builder-flow button {
+  display: grid;
+  grid-template-columns: 44px minmax(0, 1fr);
+  gap: 6px 12px;
+  align-items: center;
+  padding: 13px;
+}
+
+.builder-flow button em {
+  grid-row: span 2;
+  display: grid;
+  place-items: center;
+  width: 38px;
+  height: 38px;
+  border-radius: 9px;
+  background: rgba(0, 135, 255, 0.18);
+  color: #62caff;
+  font-style: normal;
+  font-weight: 900;
+}
+
+.builder-flow button strong,
+.builder-block-grid button strong {
+  color: #ffffff;
+}
+
+.builder-flow button span,
+.builder-block-grid button span {
+  color: #9fb0c6;
+  font-size: 13px;
+}
+
+.builder-block-grid {
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+}
+
+.builder-block-grid button {
+  display: grid;
+  gap: 7px;
+  min-height: 92px;
+  padding: 14px;
+}
+
+.option-stack button {
+  padding: 11px 12px;
+  color: #80d7ff;
+}
+
+.resume-doc-preview {
+  display: grid;
+  align-content: center;
+  gap: 10px;
+  min-height: 210px;
+  padding: 20px;
+  border: 1px solid rgba(126, 186, 255, 0.32);
+  border-radius: 10px;
+  background: linear-gradient(180deg, #f8fbff, #dce8fb);
+  color: #0b1830;
+}
+
+.resume-doc-preview strong {
+  color: #0b1830;
+}
+
+.resume-doc-preview i {
+  height: 9px;
+  border-radius: 999px;
+  background: #9fb1c9;
+}
+
+.version-grid {
+  display: grid;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  gap: 16px;
+}
+
+.version-card {
+  display: grid;
+  justify-items: center;
+  gap: 12px;
+  padding: 18px;
+  border: 1px solid rgba(28, 121, 255, 0.42);
+  border-radius: 10px;
+  background: linear-gradient(145deg, rgba(6, 19, 45, 0.9), rgba(2, 9, 25, 0.94));
+  text-align: center;
+}
+
+.version-card > div strong,
+.version-card > div span {
+  display: block;
+}
+
+.version-card > div strong {
+  color: #ffffff;
+  font-size: 17px;
+}
+
+.version-card > div span,
+.version-card p {
+  margin: 4px 0 0;
+  color: #9fb0c6;
+}
+
+.version-card .score-ring {
+  width: 132px;
+  height: 132px;
+}
+
+.version-card .score-ring strong {
+  font-size: 38px;
 }
 
 .ats-report-copy span {
@@ -2411,6 +2554,11 @@ button:disabled {
     grid-template-columns: repeat(2, minmax(0, 1fr));
   }
 
+  .career-workbench,
+  .version-grid {
+    grid-template-columns: 1fr;
+  }
+
   .feature-heading {
     align-items: start;
     flex-direction: column;
@@ -2464,7 +2612,9 @@ button:disabled {
   .ats-breakdown-row,
   .recommendation-grid,
   .clickable-skill-grid,
-  .compact-row {
+  .compact-row,
+  .builder-block-grid,
+  .builder-flow button {
     grid-template-columns: 1fr;
   }
 

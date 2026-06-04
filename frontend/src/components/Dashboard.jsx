@@ -201,36 +201,10 @@ function renderRoutePage(routeId, tools, forms, resume, outputs, handlers, loadi
     "keyword-optimizer": (
       <KeywordOptimizerPage matched={matched} missing={missing} resume={resume} navigate={navigate} />
     ),
-    "cover-letter": <CoverLetterModule navigate={navigate} />,
-    "resume-builder": (
-      <section className="analysis-grid page-grid">
-        <PreviewCard userName="Resume Builder Preview" />
-        <Card>
-          <CardTitle title="Builder Blocks" />
-          <List items={["Professional summary", "Experience bullets", "Skills matrix", "Project highlights"]} />
-        </Card>
-      </section>
-    ),
-    "resume-versions": (
-      <section className="analysis-grid page-grid">
-        <Card className="ai-card">
-          <div className="bot-orb">AI</div>
-          <h3>Resume Versions</h3>
-          <p>Create different versions for frontend, backend, data and product roles.</p>
-          <button onClick={() => navigate("/resume-checker")} type="button">Create New Version</button>
-        </Card>
-        <Card>
-          <CardTitle title="Saved Versions" />
-          <List items={["Software Engineer v1", "Frontend Developer v2", "ATS Optimized Draft"]} />
-        </Card>
-      </section>
-    ),
-    "portfolio-analyzer": (
-      <section className="analysis-grid page-grid">
-        <PortfolioCard navigate={navigate} />
-        <KeywordCard matched={matched} navigate={navigate} />
-      </section>
-    ),
+    "cover-letter": <CoverLetterPage resume={resume} matched={matched} missing={missing} navigate={navigate} />,
+    "resume-builder": <ResumeBuilderPage matched={matched} missing={missing} navigate={navigate} />,
+    "resume-versions": <ResumeVersionsPage resume={resume} navigate={navigate} />,
+    "portfolio-analyzer": <PortfolioAnalyzerPage matched={matched} missing={missing} navigate={navigate} />,
     "interview-prep": <InterviewModule forms={forms} handlers={handlers} loading={loading} outputs={outputs} />,
     "career-roadmap": <RoadmapModule />,
     "learning-hub": <LearningCard missing={missing} />,
@@ -663,30 +637,201 @@ function PreviewCard({ userName }) {
   );
 }
 
-function PortfolioCard({ navigate }) {
+function CoverLetterPage({ resume, matched, missing, navigate }) {
+  const letterPoints = [
+    `Opening tailored for ${resume.jobRole}`,
+    `Highlights ${matched.slice(0, 3).join(", ") || "core strengths"}`,
+    `Addresses ${missing.slice(0, 2).join(", ") || "growth areas"} with learning intent`,
+    "Ends with confident interview call-to-action"
+  ];
+
   return (
-    <Card>
-      <CardTitle title="Portfolio Analyzer" />
-      <div className="feature-card-copy">
-        <strong>Portfolio readiness check</strong>
-        <p>Compare projects, GitHub proof, live links and role-fit signals against your target job.</p>
-      </div>
-      <button onClick={() => navigate("/keyword-optimizer")} type="button">Improve Portfolio Keywords</button>
-    </Card>
+    <div className="career-tool-page page-grid">
+      <section className="tool-hero career-hero">
+        <div>
+          <span>Career Tools</span>
+          <h2>Cover Letter Builder</h2>
+          <p>Create a role-specific cover letter using your resume score, matched skills and target job role.</p>
+          <div className="ats-actions">
+            <button onClick={() => navigate("/resume-checker")} type="button">Use Latest Resume</button>
+            <button className="ghost-button" onClick={() => navigate("/keyword-optimizer")} type="button">Add Keywords</button>
+          </div>
+        </div>
+        <div className="tool-score-card">
+          <strong>{resume.jobRole}</strong>
+          <span>Target role</span>
+          <p>AI draft ready</p>
+        </div>
+      </section>
+
+      <section className="career-workbench">
+        <Card className="wide">
+          <CardTitle title="Letter Draft Structure" />
+          <div className="builder-flow">
+            {letterPoints.map((point, index) => (
+              <button key={point} onClick={() => navigate(index === 1 ? "/skills-analysis" : "/resume-builder")} type="button">
+                <em>0{index + 1}</em>
+                <strong>{point}</strong>
+                <span>Click to refine this block</span>
+              </button>
+            ))}
+          </div>
+        </Card>
+        <Card>
+          <CardTitle title="Tone Settings" />
+          <div className="option-stack">
+            {["Professional", "Confident", "Concise", "Achievement-focused"].map((tone) => (
+              <button key={tone} type="button">{tone}</button>
+            ))}
+          </div>
+        </Card>
+        <Card>
+          <CardTitle title="Quick Actions" />
+          <div className="missing-action-list">
+            <button onClick={() => navigate("/resume-builder")} type="button"><strong>Build Resume First</strong><span>Improve source content</span></button>
+            <button onClick={() => navigate("/interview-prep")} type="button"><strong>Prepare Answers</strong><span>Use same role story</span></button>
+            <button onClick={() => navigate("/job-tracker")} type="button"><strong>Add to Job Tracker</strong><span>Track application status</span></button>
+          </div>
+        </Card>
+      </section>
+    </div>
   );
 }
 
-function CoverLetterModule({ navigate }) {
+function ResumeBuilderPage({ matched, missing, navigate }) {
   return (
-    <section className="productivity-dock page-modules">
-      <Module title="Cover Letter Builder">
-        <div className="feature-card-copy">
-          <strong>Generate role-specific cover letters</strong>
-          <p>Uses resume keywords, missing skills and target role to draft a sharper application story.</p>
+    <div className="career-tool-page page-grid">
+      <section className="tool-hero career-hero">
+        <div>
+          <span>Career Tools</span>
+          <h2>Resume Builder Workspace</h2>
+          <p>Build ATS-safe sections with clean structure, measurable bullets and role-ready keywords.</p>
+          <div className="ats-actions">
+            <button onClick={() => navigate("/ats-score")} type="button">Check ATS Score</button>
+            <button className="ghost-button" onClick={() => navigate("/resume-versions")} type="button">Save Version</button>
+          </div>
         </div>
-        <button onClick={() => navigate("/resume-checker")} type="button">Start from Resume</button>
-      </Module>
-    </section>
+        <div className="resume-doc-preview">
+          <strong>Resume Draft</strong>
+          <i /><i /><i /><i /><i />
+        </div>
+      </section>
+
+      <section className="analysis-grid">
+        <Card className="wide">
+          <CardTitle title="Builder Blocks" />
+          <div className="builder-block-grid">
+            {[
+              ["Professional Summary", "Write a 3-line role-specific summary."],
+              ["Experience Bullets", "Use action + tool + result format."],
+              ["Skills Matrix", `Include ${matched.slice(0, 4).join(", ") || "matched role skills"}.`],
+              ["Projects", "Add problem, tech stack, impact and links."],
+              ["Education", "Keep degree, institute, dates and achievements."],
+              ["Certifications", `Support missing skills like ${missing[0] || "cloud or analytics"}.`]
+            ].map(([title, copy]) => (
+              <button key={title} onClick={() => navigate("/keyword-optimizer")} type="button">
+                <strong>{title}</strong>
+                <span>{copy}</span>
+              </button>
+            ))}
+          </div>
+        </Card>
+        <PreviewCard userName="Live Resume Preview" />
+      </section>
+    </div>
+  );
+}
+
+function ResumeVersionsPage({ resume, navigate }) {
+  return (
+    <div className="career-tool-page page-grid">
+      <section className="tool-hero career-hero">
+        <div>
+          <span>Career Tools</span>
+          <h2>Resume Versions Manager</h2>
+          <p>Create separate versions for each job type and compare ATS readiness before applying.</p>
+          <div className="ats-actions">
+            <button onClick={() => navigate("/resume-builder")} type="button">Create Version</button>
+            <button className="ghost-button" onClick={() => navigate("/ats-score")} type="button">Compare Scores</button>
+          </div>
+        </div>
+        <div className="tool-score-card">
+          <strong>3 Active</strong>
+          <span>Saved resume versions</span>
+          <p>Current target: {resume.jobRole}</p>
+        </div>
+      </section>
+
+      <section className="version-grid">
+        {[
+          ["Primary ATS Resume", "Software Engineer", 87, "Ready"],
+          ["Frontend Focused", "React Developer", 82, "Needs keywords"],
+          ["Fresh Graduate", "Graduate Engineer Trainee (GET)", 76, "Improve projects"]
+        ].map(([name, role, score, status]) => (
+          <article className="version-card" key={name}>
+            <div>
+              <strong>{name}</strong>
+              <span>{role}</span>
+            </div>
+            <ScoreRing value={score} tone={score > 80 ? "green" : "purple"} />
+            <p>{status}</p>
+            <button onClick={() => navigate("/resume-checker")} type="button">Open Version</button>
+          </article>
+        ))}
+      </section>
+    </div>
+  );
+}
+
+function PortfolioAnalyzerPage({ matched, missing, navigate }) {
+  return (
+    <div className="career-tool-page page-grid">
+      <section className="tool-hero career-hero">
+        <div>
+          <span>Career Tools</span>
+          <h2>Portfolio Analyzer</h2>
+          <p>Review project proof, GitHub links, portfolio keywords and role-fit signals before sharing with recruiters.</p>
+          <div className="ats-actions">
+            <button onClick={() => navigate("/keyword-optimizer")} type="button">Improve Portfolio Keywords</button>
+            <button className="ghost-button" onClick={() => navigate("/resume-builder")} type="button">Add Projects to Resume</button>
+          </div>
+        </div>
+        <div className="keyword-score">
+          <strong>74%</strong>
+          <span>portfolio readiness</span>
+          <p>{missing.length || 4} improvement areas</p>
+        </div>
+      </section>
+
+      <section className="analysis-grid">
+        <Card>
+          <CardTitle title="Portfolio Checks" />
+          <ul className="ats-checklist">
+            <li className="pass">Project titles are clear</li>
+            <li className="warn">Add stronger business impact</li>
+            <li className="pass">Technical keywords detected</li>
+            <li className="warn">Add GitHub/live demo links</li>
+          </ul>
+        </Card>
+        <Card className="wide">
+          <CardTitle title="Project Proof Matrix" />
+          <div className="builder-block-grid">
+            {["Problem Statement", "Tech Stack", "Your Contribution", "Measurable Result", "Live Link", "GitHub Proof"].map((item) => (
+              <button key={item} onClick={() => navigate("/resume-builder")} type="button">
+                <strong>{item}</strong>
+                <span>Add this evidence to improve recruiter trust.</span>
+              </button>
+            ))}
+          </div>
+        </Card>
+        <Card>
+          <CardTitle title="Detected Keywords" />
+          <div className="keyword-cloud compact">
+            {matched.slice(0, 8).map((skill) => <span key={skill}>{skill}</span>)}
+          </div>
+        </Card>
+      </section>
+    </div>
   );
 }
 
