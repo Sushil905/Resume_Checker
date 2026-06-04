@@ -42,8 +42,8 @@ export const routeSections = [
   {
     title: "Analytics",
     items: [
-      { id: "analytics", path: "/analytics", label: "Analytics", badge: "An" },
-      { id: "market-insights", path: "/market-insights", label: "Market Insights", badge: "Ma" }
+      { id: "analytics", path: "/analytics", label: "Analytics", badge: "An", tag: "Live", copy: "Scores, trends and progress" },
+      { id: "market-insights", path: "/market-insights", label: "Market Insights", badge: "Ma", tag: "Trend", copy: "Hiring signals and skill demand" }
     ]
   },
   {
@@ -342,23 +342,8 @@ function renderRoutePage(routeId, tools, forms, resume, outputs, handlers, loadi
     "learning-hub": <LearningCard missing={missing} navigate={navigate} resume={resume} />,
     "job-match": <JobMatchPage matchScore={matchScore} matched={matched} missing={missing} resume={resume} navigate={navigate} />,
     "job-tracker": <JobTrackerModule navigate={navigate} />,
-    analytics: (
-      <section className="analysis-grid page-grid">
-        <Card className="wide">
-          <CardTitle title="Analytics" />
-          <div className="analytics-mini">
-            <Metric label="Resume health" value={atsScore} />
-            <Metric label="Job match" value={matchScore} />
-            <Metric label="Task progress" value={Math.min(100, Math.max(30, tasks.length ? 78 : 68))} />
-          </div>
-        </Card>
-        <Card>
-          <CardTitle title="Productivity Score" />
-          <ScoreRing value={Math.min(99, Math.max(50, tasks.length ? 82 : 76))} tone="purple" />
-        </Card>
-      </section>
-    ),
-    "market-insights": <MarketInsightsModule />,
+    analytics: <AnalyticsPage atsScore={atsScore} goals={goals} matchScore={matchScore} navigate={navigate} notes={notes} tasks={tasks} />,
+    "market-insights": <MarketInsightsModule matched={matched} missing={missing} navigate={navigate} resume={resume} />,
     "ai-assistant": (
       <section className="productivity-dock page-modules">
         <TaskModule forms={forms} handlers={handlers} loading={loading} tasks={tasks} />
@@ -1298,19 +1283,182 @@ function JobTrackerModule({ navigate }) {
   );
 }
 
-function MarketInsightsModule() {
+function AnalyticsPage({ atsScore, goals, matchScore, navigate, notes, tasks }) {
+  const productivityScore = Math.min(99, Math.max(58, tasks.length ? 82 : 76));
+  const completionScore = Math.min(96, 62 + goals.length * 8 + tasks.length * 3);
+  const analyticsCards = [
+    ["Resume Health", `${atsScore}/100`, "ATS readiness and content quality", "/ats-score"],
+    ["Job Match", `${matchScore}%`, "Current role fit and keyword coverage", "/job-match"],
+    ["Productivity", `${productivityScore}/100`, "Task momentum and daily execution", "/ai-assistant"],
+    ["Goal Progress", `${completionScore}%`, "Career roadmap completion estimate", "/career-roadmap"]
+  ];
+  const funnel = [
+    ["Resume Screened", 12, "ATS and skills data captured"],
+    ["Roles Matched", 8, "High-fit opportunities identified"],
+    ["Applications Sent", 4, "Tracked in pipeline"],
+    ["Interviews", 2, "Practice and feedback needed"]
+  ];
+
   return (
-    <section className="productivity-dock page-modules">
-      <Module title="Market Insights">
-        <div className="feature-card-copy">
-          <strong>Role demand signals</strong>
-          <p>Shows target-role skills, salary direction and hiring keywords to optimize applications.</p>
+    <div className="analytics-page page-grid">
+      <section className="tool-hero analytics-hero">
+        <div>
+          <span>Analytics</span>
+          <h2>Career Performance Dashboard</h2>
+          <p>Monitor resume health, job-match strength, task execution and goal progress with clear AI-driven recommendations.</p>
+          <div className="ats-actions">
+            <button onClick={() => navigate("/ats-score")} type="button">Improve Score</button>
+            <button className="ghost-button" onClick={() => navigate("/market-insights")} type="button">View Market Signals</button>
+          </div>
         </div>
-        <div className="keyword-cloud compact">
-          {["React", "Node.js", "AWS", "TypeScript", "System Design"].map((keyword) => <span key={keyword}>{keyword}</span>)}
+        <div className="analytics-score-card">
+          <ScoreRing value={productivityScore} tone="purple" />
+          <strong>Performance Index</strong>
+          <span>{tasks.length || 3} tasks, {notes.length || 2} notes, {goals.length || 1} goals tracked</span>
         </div>
-      </Module>
-    </section>
+      </section>
+
+      <section className="analytics-kpi-grid">
+        {analyticsCards.map(([title, value, copy, path]) => (
+          <button key={title} onClick={() => navigate(path)} type="button">
+            <span>{title}</span>
+            <strong>{value}</strong>
+            <em>{copy}</em>
+          </button>
+        ))}
+      </section>
+
+      <section className="analytics-grid">
+        <Card className="wide">
+          <CardTitle title="Score Breakdown" />
+          <div className="analytics-mini">
+            <Metric label="Resume health" value={atsScore} />
+            <Metric label="Job match" value={matchScore} />
+            <Metric label="Task progress" value={productivityScore} />
+            <Metric label="Goal execution" value={completionScore} />
+          </div>
+        </Card>
+
+        <Card>
+          <CardTitle title="AI Insights" />
+          <div className="priority-gap-list">
+            {["Optimize missing keywords", "Apply to 4 high-fit roles", "Practice 2 interview answers"].map((item, index) => (
+              <button key={item} onClick={() => navigate(index === 0 ? "/keyword-optimizer" : index === 1 ? "/job-tracker" : "/interview-prep")} type="button">
+                <strong>{item}</strong>
+                <span>{index === 0 ? "Highest impact" : "Recommended this week"}</span>
+              </button>
+            ))}
+          </div>
+        </Card>
+
+        <Card className="wide">
+          <CardTitle title="Application Funnel" />
+          <div className="analytics-funnel">
+            {funnel.map(([label, count, copy]) => (
+              <button key={label} onClick={() => navigate(label === "Interviews" ? "/interview-prep" : "/job-tracker")} type="button">
+                <strong>{count}</strong>
+                <span>{label}</span>
+                <em>{copy}</em>
+              </button>
+            ))}
+          </div>
+        </Card>
+      </section>
+    </div>
+  );
+}
+
+function MarketInsightsModule({ matched, missing, navigate, resume }) {
+  const demandSignals = [
+    ["High Demand", "React, Node.js and cloud-ready profiles are receiving stronger shortlists."],
+    ["Rising Skill", `${missing[0] || "TypeScript"} can improve match quality for ${resume.jobRole}.`],
+    ["Resume Signal", "Recruiters scan measurable outcomes, ownership and project proof first."]
+  ];
+  const marketRoles = [
+    ["Frontend Developer", "92%", "React, TypeScript, UI systems"],
+    ["Full Stack Developer", "88%", "Node.js, APIs, databases"],
+    ["AI Engineer", "81%", "Python, ML, prompt workflows"]
+  ];
+
+  return (
+    <div className="market-page page-grid">
+      <section className="tool-hero analytics-hero market-hero">
+        <div>
+          <span>Market Insights</span>
+          <h2>Hiring Market Intelligence</h2>
+          <p>Understand demand signals, trending skills and role-fit opportunities before tailoring your resume and applications.</p>
+          <div className="ats-actions">
+            <button onClick={() => navigate("/job-match")} type="button">Check Role Fit</button>
+            <button className="ghost-button" onClick={() => navigate("/learning-hub")} type="button">Close Skill Gaps</button>
+          </div>
+        </div>
+        <div className="tracker-score-card">
+          <strong>Hot</strong>
+          <span>{resume.jobRole}</span>
+          <p>{matched.length + missing.length} skills analyzed</p>
+        </div>
+      </section>
+
+      <section className="analytics-grid">
+        <Card className="wide">
+          <CardTitle title="Role Demand Board" />
+          <div className="application-table">
+            {marketRoles.map(([role, score, skills]) => (
+              <button key={role} onClick={() => navigate("/job-match")} type="button">
+                <span>
+                  <strong>{role}</strong>
+                  <em>{skills}</em>
+                </span>
+                <b>Demand</b>
+                <small>Market fit estimate</small>
+                <i>{score}</i>
+              </button>
+            ))}
+          </div>
+        </Card>
+
+        <Card>
+          <CardTitle title="Trending Keywords" />
+          <div className="market-keyword-grid">
+            {[...matched.slice(0, 6), ...missing.slice(0, 4)].map((skill, index) => (
+              <button key={`${skill}-${index}`} onClick={() => navigate(index < 6 ? "/skills-analysis" : "/learning-hub")} type="button">
+                <strong>{skill}</strong>
+                <span>{index < 6 ? "Detected strength" : "Growth opportunity"}</span>
+              </button>
+            ))}
+          </div>
+        </Card>
+
+        <Card>
+          <CardTitle title="Demand Signals" />
+          <div className="priority-gap-list">
+            {demandSignals.map(([title, copy]) => (
+              <button key={title} onClick={() => navigate("/keyword-optimizer")} type="button">
+                <strong>{title}</strong>
+                <span>{copy}</span>
+              </button>
+            ))}
+          </div>
+        </Card>
+
+        <Card className="wide">
+          <CardTitle title="Market Action Plan" />
+          <div className="job-action-grid">
+            {[
+              ["Tailor Resume", "Align bullets with demand keywords and measurable proof.", "/resume-builder"],
+              ["Track Target Roles", "Add shortlisted roles to the application tracker.", "/job-tracker"],
+              ["Build Skill Plan", "Use Learning Hub to close market gaps faster.", "/learning-hub"]
+            ].map(([title, copy, path]) => (
+              <button key={title} onClick={() => navigate(path)} type="button">
+                <strong>{title}</strong>
+                <span>{copy}</span>
+                <em>Open workflow</em>
+              </button>
+            ))}
+          </div>
+        </Card>
+      </section>
+    </div>
   );
 }
 

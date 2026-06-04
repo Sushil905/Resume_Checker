@@ -1732,6 +1732,20 @@ button:disabled {
     linear-gradient(145deg, rgba(6, 19, 45, 0.96), rgba(2, 9, 25, 0.94));
 }
 
+.analytics-hero {
+  background:
+    radial-gradient(circle at 84% 18%, rgba(34, 240, 138, 0.15), transparent 30%),
+    radial-gradient(circle at 12% 86%, rgba(57, 194, 255, 0.14), transparent 32%),
+    linear-gradient(145deg, rgba(6, 19, 45, 0.96), rgba(2, 9, 25, 0.94));
+}
+
+.market-hero {
+  background:
+    radial-gradient(circle at 84% 18%, rgba(255, 196, 107, 0.15), transparent 30%),
+    radial-gradient(circle at 12% 86%, rgba(152, 93, 255, 0.14), transparent 32%),
+    linear-gradient(145deg, rgba(6, 19, 45, 0.96), rgba(2, 9, 25, 0.94));
+}
+
 .tool-hero span {
   color: #39c2ff;
   font-size: 13px;
@@ -1818,15 +1832,140 @@ button:disabled {
 }
 
 .job-match-page,
-.job-tracker-page {
+.job-tracker-page,
+.analytics-page,
+.market-page {
   display: grid;
   gap: 16px;
 }
 
-.job-intelligence-grid {
+.job-intelligence-grid,
+.analytics-grid {
   display: grid;
   grid-template-columns: repeat(12, minmax(0, 1fr));
   gap: 16px;
+}
+
+.analytics-score-card {
+  display: grid;
+  place-items: center;
+  align-content: center;
+  gap: 8px;
+  min-height: 230px;
+  border: 1px solid rgba(34, 240, 138, 0.28);
+  border-radius: 10px;
+  background:
+    radial-gradient(circle at 50% 32%, rgba(34, 240, 138, 0.14), transparent 42%),
+    rgba(1, 11, 27, 0.62);
+  box-shadow: inset 0 0 34px rgba(34, 240, 138, 0.1);
+}
+
+.analytics-score-card strong {
+  color: #ffffff;
+  font-size: 20px;
+}
+
+.analytics-score-card span {
+  max-width: 210px;
+  color: #aebdd3;
+  text-align: center;
+  font-size: 13px;
+}
+
+.analytics-kpi-grid {
+  display: grid;
+  grid-template-columns: repeat(4, minmax(0, 1fr));
+  gap: 14px;
+}
+
+.analytics-kpi-grid button,
+.analytics-funnel button,
+.market-keyword-grid button {
+  border: 1px solid rgba(36, 128, 255, 0.38);
+  border-radius: 9px;
+  background:
+    radial-gradient(circle at 86% 18%, rgba(57, 194, 255, 0.12), transparent 34%),
+    rgba(0, 66, 155, 0.18);
+  color: #dce8ff;
+  box-shadow: none;
+  cursor: pointer;
+  text-align: left;
+  transition: border-color 180ms ease, transform 180ms ease, background 180ms ease;
+}
+
+.analytics-kpi-grid button:hover,
+.analytics-funnel button:hover,
+.market-keyword-grid button:hover {
+  border-color: #39c2ff;
+  background: rgba(0, 112, 255, 0.26);
+  transform: translateY(-2px);
+}
+
+.analytics-kpi-grid button {
+  display: grid;
+  gap: 8px;
+  min-height: 132px;
+  padding: 18px;
+}
+
+.analytics-kpi-grid button span {
+  color: #8fb1d6;
+  font-size: 12px;
+  font-weight: 900;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+}
+
+.analytics-kpi-grid button strong {
+  color: #ffffff;
+  font-size: 30px;
+}
+
+.analytics-kpi-grid button em {
+  color: #9fb0c6;
+  font-style: normal;
+  font-size: 13px;
+}
+
+.analytics-funnel {
+  display: grid;
+  grid-template-columns: repeat(4, minmax(0, 1fr));
+  gap: 12px;
+}
+
+.analytics-funnel button {
+  display: grid;
+  gap: 7px;
+  padding: 16px;
+}
+
+.analytics-funnel button strong {
+  color: #22f08a;
+  font-size: 30px;
+}
+
+.analytics-funnel button span,
+.market-keyword-grid button strong {
+  color: #ffffff;
+  font-weight: 900;
+}
+
+.analytics-funnel button em,
+.market-keyword-grid button span {
+  color: #9fb0c6;
+  font-style: normal;
+  font-size: 13px;
+}
+
+.market-keyword-grid {
+  display: grid;
+  gap: 10px;
+}
+
+.market-keyword-grid button {
+  display: grid;
+  gap: 6px;
+  padding: 12px;
 }
 
 .match-metric-grid {
@@ -3006,7 +3145,9 @@ button:disabled {
   .roadmap-timeline,
   .fit-lane,
   .job-action-grid,
-  .tracker-pipeline {
+  .tracker-pipeline,
+  .analytics-kpi-grid,
+  .analytics-funnel {
     grid-template-columns: 1fr;
   }
 
@@ -3067,6 +3208,7 @@ button:disabled {
   .ats-report-hero,
   .tool-hero,
   .job-intelligence-grid,
+  .analytics-grid,
   .match-metric-grid,
   .ats-breakdown-row,
   .recommendation-grid,
