@@ -1882,6 +1882,114 @@ button:disabled {
   font-weight: 900;
 }
 
+.learning-hub-layout {
+  display: grid;
+  grid-template-columns: 280px minmax(0, 1fr);
+  gap: 16px;
+}
+
+.learning-sidebar {
+  position: sticky;
+  top: 98px;
+  display: grid;
+  align-content: start;
+  gap: 8px;
+  max-height: calc(100vh - 120px);
+  padding: 16px;
+  border: 1px solid rgba(28, 121, 255, 0.34);
+  border-radius: 10px;
+  background: linear-gradient(145deg, rgba(6, 19, 45, 0.9), rgba(2, 9, 25, 0.94));
+  overflow: auto;
+}
+
+.learning-sidebar a {
+  display: grid;
+  grid-template-columns: 34px minmax(0, 1fr);
+  align-items: center;
+  gap: 10px;
+  padding: 10px;
+  border: 1px solid transparent;
+  border-radius: 9px;
+  color: #dce8ff;
+  text-decoration: none;
+}
+
+.learning-sidebar a:hover {
+  border-color: rgba(36, 128, 255, 0.5);
+  background: rgba(0, 66, 155, 0.2);
+}
+
+.learning-sidebar a span,
+.learning-section-title > span {
+  display: grid;
+  place-items: center;
+  width: 34px;
+  height: 34px;
+  border-radius: 9px;
+  background: rgba(0, 135, 255, 0.18);
+  color: #62caff;
+  font-weight: 900;
+}
+
+.learning-sidebar a strong {
+  min-width: 0;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.learning-section-stack {
+  display: grid;
+  gap: 16px;
+}
+
+.learning-section-card {
+  display: grid;
+  gap: 15px;
+  padding: 18px;
+  border: 1px solid rgba(28, 121, 255, 0.34);
+  border-radius: 10px;
+  background:
+    radial-gradient(circle at 92% 8%, rgba(57, 194, 255, 0.1), transparent 24%),
+    linear-gradient(145deg, rgba(6, 19, 45, 0.88), rgba(2, 9, 25, 0.92));
+  scroll-margin-top: 104px;
+}
+
+.learning-section-card.personal-plan {
+  grid-template-columns: minmax(0, 0.95fr) minmax(260px, 1.05fr);
+  align-items: start;
+}
+
+.learning-section-card.personal-plan > div > span {
+  color: #39c2ff;
+  font-size: 13px;
+  font-weight: 900;
+  letter-spacing: 0.09em;
+  text-transform: uppercase;
+}
+
+.learning-section-card h3 {
+  margin: 0;
+  color: #ffffff;
+  font-size: 21px;
+}
+
+.learning-section-card p {
+  margin: 6px 0 0;
+  color: #9fb0c6;
+  line-height: 1.5;
+}
+
+.learning-section-title {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+}
+
+.learning-resource-grid {
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+}
+
 .prep-track-list {
   display: grid;
   gap: 10px;
@@ -2666,8 +2774,16 @@ button:disabled {
   .career-workbench,
   .version-grid,
   .resource-grid,
+  .learning-hub-layout,
+  .learning-section-card.personal-plan,
   .roadmap-timeline {
     grid-template-columns: 1fr;
+  }
+
+  .learning-sidebar {
+    position: relative;
+    top: auto;
+    max-height: none;
   }
 
   .feature-heading {

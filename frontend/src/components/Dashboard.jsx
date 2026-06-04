@@ -58,33 +58,98 @@ export const routeSections = [
 
 export const flatRoutes = routeSections.flatMap((section) => section.items);
 
-const learningResources = {
-  Technology: [
-    ["MDN Learn Web Development", "Frontend foundations, JavaScript, browser APIs and web standards.", "https://developer.mozilla.org/en-US/docs/Learn"],
-    ["freeCodeCamp", "Hands-on coding curriculum, projects and interview-friendly practice.", "https://www.freecodecamp.org/learn/"],
-    ["Google Cloud Skills Boost", "Cloud, data, DevOps and AI labs with practical exercises.", "https://www.cloudskillsboost.google/"]
-  ],
-  "Non-Technology": [
-    ["Atlassian Agile Coach", "Project management, agile, product delivery and team collaboration.", "https://www.atlassian.com/agile"],
-    ["PMI Learning", "Project management learning resources and professional frameworks.", "https://www.pmi.org/learning"],
-    ["HubSpot Academy", "Customer success, CRM, content, operations and business growth courses.", "https://academy.hubspot.com/"]
-  ],
-  "Sales & Marketing": [
-    ["Google Skillshop", "Google Ads, analytics and digital marketing product training.", "https://skillshop.withgoogle.com/"],
-    ["HubSpot Academy", "Inbound sales, CRM, email, content, SEO and marketing courses.", "https://academy.hubspot.com/"],
-    ["Meta Blueprint", "Social media marketing, ads, brand and campaign learning.", "https://www.facebook.com/business/learn"]
-  ],
-  "Freshers & Internships": [
-    ["National Career Service", "Government job portal for career guidance, jobs and employer discovery.", "https://www.ncs.gov.in/"],
-    ["freeCodeCamp Projects", "Build portfolio projects to prove skills as a fresher.", "https://www.freecodecamp.org/learn/"],
-    ["Google Cloud Skills Boost", "Beginner-friendly labs for cloud, AI and data career paths.", "https://www.cloudskillsboost.google/"]
-  ],
-  Government: [
-    ["UPSC Official", "Official exam notifications, syllabus, recruitment and candidate information.", "https://upsc.gov.in/"],
-    ["SSC Official", "Official Staff Selection Commission notices, exams and candidate updates.", "https://ssc.gov.in/"],
-    ["National Career Service", "Government career services, jobs, counselling and skill resources.", "https://www.ncs.gov.in/"]
-  ]
-};
+const learningHubSections = [
+  {
+    title: "Programming Languages",
+    badge: "PL",
+    resources: [
+      ["Python Docs Tutorial", "Official Python tutorial for fundamentals, data structures and modules.", "https://docs.python.org/3/tutorial/"],
+      ["JavaScript MDN Guide", "Modern JavaScript concepts, browser APIs and language reference.", "https://developer.mozilla.org/en-US/docs/Web/JavaScript/Guide"],
+      ["Java Tutorials", "Official Oracle Java tutorials for core language and OOP concepts.", "https://dev.java/learn/"],
+      ["Go by Example", "Practical Go examples for syntax, concurrency and standard library usage.", "https://gobyexample.com/"]
+    ]
+  },
+  {
+    title: "DSA & Algorithms",
+    badge: "DS",
+    resources: [
+      ["NeetCode Roadmap", "Structured DSA roadmap with patterns for coding interviews.", "https://neetcode.io/roadmap"],
+      ["LeetCode Explore", "Topic-wise practice for arrays, strings, trees, graphs and DP.", "https://leetcode.com/explore/"],
+      ["HackerRank Interview Prep", "Interview practice kits for problem solving and data structures.", "https://www.hackerrank.com/interview/interview-preparation-kit"],
+      ["CP-Algorithms", "Algorithm explanations for graph, DP, strings, math and advanced topics.", "https://cp-algorithms.com/"]
+    ]
+  },
+  {
+    title: "Core CS Subjects",
+    badge: "CS",
+    resources: [
+      ["Operating Systems: Three Easy Pieces", "Free OS book covering processes, memory, concurrency and persistence.", "https://pages.cs.wisc.edu/~remzi/OSTEP/"],
+      ["Computer Networking: A Top-Down Approach", "Companion resources for networking fundamentals and protocols.", "https://gaia.cs.umass.edu/kurose_ross/"],
+      ["Database System Concepts", "Database learning resources around SQL, design and transactions.", "https://www.db-book.com/"],
+      ["Nand2Tetris", "Build a computer from logic gates to software for deep CS foundations.", "https://www.nand2tetris.org/"]
+    ]
+  },
+  {
+    title: "Development Tracks",
+    badge: "DV",
+    resources: [
+      ["roadmap.sh", "Role-based roadmaps for frontend, backend, DevOps, AI and more.", "https://roadmap.sh/"],
+      ["MDN Learn Web Development", "Frontend foundations, HTML, CSS, JavaScript and web app basics.", "https://developer.mozilla.org/en-US/docs/Learn"],
+      ["freeCodeCamp", "Hands-on full-stack, data, backend and responsive web projects.", "https://www.freecodecamp.org/learn/"],
+      ["Google Cloud Skills Boost", "Practical labs for cloud, AI, DevOps and data engineering.", "https://www.cloudskillsboost.google/"]
+    ]
+  },
+  {
+    title: "Certifications",
+    badge: "CR",
+    resources: [
+      ["Microsoft Learn", "Microsoft certification paths for Azure, data, AI and business apps.", "https://learn.microsoft.com/en-us/training/"],
+      ["AWS Skill Builder", "AWS cloud learning plans, labs and certification preparation.", "https://skillbuilder.aws/"],
+      ["Google Cloud Skills Boost", "Google Cloud certification learning paths and hands-on labs.", "https://www.cloudskillsboost.google/"],
+      ["Cisco Networking Academy", "Networking, cybersecurity and IT certification-aligned learning.", "https://www.netacad.com/"]
+    ]
+  },
+  {
+    title: "Placement Prep",
+    badge: "PP",
+    resources: [
+      ["National Career Service", "Government career portal for jobs, counselling and employability resources.", "https://www.ncs.gov.in/"],
+      ["HackerRank Jobs and Skills", "Practice coding and skill assessments used in hiring.", "https://www.hackerrank.com/"],
+      ["LinkedIn Learning", "Professional courses for business, tech and career growth.", "https://www.linkedin.com/learning/"],
+      ["Google Interview Warmup", "Practice interview answers with AI-assisted prompts.", "https://grow.google/certificates/interview-warmup/"]
+    ]
+  },
+  {
+    title: "Interview Questions",
+    badge: "IQ",
+    resources: [
+      ["InterviewBit", "Technical interview questions for programming, DSA and system design.", "https://www.interviewbit.com/"],
+      ["LeetCode Interview", "Coding interview questions and company-style practice.", "https://leetcode.com/problemset/"],
+      ["Pramp", "Peer mock interviews for coding, product and behavioral practice.", "https://www.pramp.com/"],
+      ["STAR Method Guide", "Behavioral interview framework for structured answers.", "https://www.themuse.com/advice/star-interview-method"]
+    ]
+  },
+  {
+    title: "Projects",
+    badge: "PR",
+    resources: [
+      ["GitHub Skills", "Interactive GitHub courses for portfolio workflows and collaboration.", "https://skills.github.com/"],
+      ["Frontend Mentor", "Realistic frontend projects for UI and portfolio building.", "https://www.frontendmentor.io/challenges"],
+      ["Kaggle Learn", "Data science and ML micro-courses with notebooks and projects.", "https://www.kaggle.com/learn"],
+      ["Build your own X", "Open-source project ideas for building real systems from scratch.", "https://github.com/codecrafters-io/build-your-own-x"]
+    ]
+  },
+  {
+    title: "AI Recommendations",
+    badge: "AI",
+    resources: [
+      ["OpenAI Prompt Engineering Guide", "Prompting patterns for building AI-assisted workflows.", "https://platform.openai.com/docs/guides/prompt-engineering"],
+      ["Google AI Essentials", "Beginner-friendly AI productivity and career upskilling course.", "https://grow.google/ai-essentials/"],
+      ["Microsoft AI Learning Hub", "AI learning paths, copilots and responsible AI resources.", "https://learn.microsoft.com/en-us/ai/"],
+      ["Hugging Face Learn", "Open-source machine learning, NLP and transformer learning resources.", "https://huggingface.co/learn"]
+    ]
+  }
+];
 
 const interviewTracks = [
   ["HR Round", "Tell me about yourself, strengths, weakness and career goals."],
@@ -968,7 +1033,6 @@ function RoadmapModule({ navigate, resume }) {
 }
 
 function LearningCard({ missing, navigate, resume }) {
-  const resources = learningResources[resume.roleCategory] || learningResources.Technology;
   const recommendedSkills = missing.length ? missing.slice(0, 6) : ["communication", "portfolio projects", "interview practice", "role keywords"];
 
   return (
@@ -977,53 +1041,68 @@ function LearningCard({ missing, navigate, resume }) {
         <div>
           <span>Job Preparation</span>
           <h2>Learning Hub</h2>
-          <p>Curated real-world resources for {resume.roleCategory} roles, plus a personal skill queue based on your resume gaps.</p>
+          <p>Structured resources for programming, DSA, core CS, development, certifications, placement prep, interviews, projects and AI recommendations.</p>
           <div className="ats-actions">
             <button onClick={() => navigate("/career-roadmap")} type="button">Build Roadmap</button>
             <button className="ghost-button" onClick={() => navigate("/interview-prep")} type="button">Practice Interview</button>
           </div>
         </div>
         <div className="tool-score-card">
-          <strong>{resources.length}</strong>
-          <span>verified resources</span>
+          <strong>{learningHubSections.length}</strong>
+          <span>learning sections</span>
           <p>{recommendedSkills.length} skill targets</p>
         </div>
       </section>
 
-      <section className="analysis-grid">
-        <Card className="wide">
-          <CardTitle title={`${resume.roleCategory} Resources`} />
-          <div className="resource-grid">
-            {resources.map(([title, copy, url]) => (
-              <a href={url} key={title} rel="noreferrer" target="_blank">
-                <strong>{title}</strong>
-                <span>{copy}</span>
-                <em>Open resource</em>
-              </a>
-            ))}
-          </div>
-        </Card>
+      <section className="learning-hub-layout">
+        <aside className="learning-sidebar">
+          <CardTitle title="Learning Hub" />
+          {learningHubSections.map((section) => (
+            <a href={`#${section.title.toLowerCase().replaceAll(" ", "-").replaceAll("&", "and")}`} key={section.title}>
+              <span>{section.badge}</span>
+              <strong>{section.title}</strong>
+            </a>
+          ))}
+        </aside>
 
-        <Card>
-          <CardTitle title="Personal Skill Queue" />
-          <div className="missing-action-list">
-            {recommendedSkills.map((skill) => (
-              <button key={skill} onClick={() => navigate("/skills-analysis")} type="button">
-                <strong>{skill}</strong>
-                <span>Learn, practice and add proof to resume</span>
-              </button>
-            ))}
-          </div>
-        </Card>
+        <div className="learning-section-stack">
+          <section className="learning-section-card personal-plan">
+            <div>
+              <span>AI Recommendations</span>
+              <h3>Personal Skill Queue for {resume.jobRole}</h3>
+              <p>Use these items to decide what to learn first, then add proof in resume projects and interview stories.</p>
+            </div>
+            <div className="missing-action-list">
+              {recommendedSkills.map((skill) => (
+                <button key={skill} onClick={() => navigate("/skills-analysis")} type="button">
+                  <strong>{skill}</strong>
+                  <span>Learn, practice and add proof to resume</span>
+                </button>
+              ))}
+            </div>
+          </section>
 
-        <Card>
-          <CardTitle title="Resource Categories" />
-          <div className="option-stack">
-            {Object.keys(learningResources).map((category) => (
-              <a href={learningResources[category][0][2]} key={category} rel="noreferrer" target="_blank">{category}</a>
-            ))}
-          </div>
-        </Card>
+          {learningHubSections.map((section) => (
+            <section className="learning-section-card" id={section.title.toLowerCase().replaceAll(" ", "-").replaceAll("&", "and")} key={section.title}>
+              <div className="learning-section-title">
+                <span>{section.badge}</span>
+                <div>
+                  <h3>{section.title}</h3>
+                  <p>{section.resources.length} curated resources for practical career preparation.</p>
+                </div>
+              </div>
+              <div className="resource-grid learning-resource-grid">
+                {section.resources.map(([title, copy, url]) => (
+                  <a href={url} key={title} rel="noreferrer" target="_blank">
+                    <strong>{title}</strong>
+                    <span>{copy}</span>
+                    <em>Open resource</em>
+                  </a>
+                ))}
+              </div>
+            </section>
+          ))}
+        </div>
       </section>
     </div>
   );
