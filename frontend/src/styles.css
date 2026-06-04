@@ -787,6 +787,12 @@ h1 {
   gap: 18px;
 }
 
+.role-picker {
+  display: grid;
+  grid-template-columns: minmax(180px, 0.8fr) minmax(220px, 1.2fr);
+  gap: 14px;
+}
+
 label {
   display: grid;
   gap: 8px;
@@ -2141,6 +2147,10 @@ button:disabled {
   }
 
   .workspace-summary {
+    grid-template-columns: 1fr;
+  }
+
+  .role-picker {
     grid-template-columns: 1fr;
   }
 }

@@ -180,8 +180,10 @@ function renderRoutePage(routeId, tools, forms, resume, outputs, handlers, loadi
           <ResumeUpload
             file={resume.file}
             jobRole={resume.jobRole}
+            roleCategory={resume.roleCategory}
             loading={resume.loading}
             onFileChange={handlers.setResumeFile}
+            onCategoryChange={handlers.setResumeRoleCategory}
             onRoleChange={handlers.setResumeRole}
             onSubmit={handlers.screenResume}
           />

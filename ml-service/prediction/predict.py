@@ -36,14 +36,140 @@ ROLE_SKILLS = {
     },
 }
 
+TECH_ROLES = {
+    "Backend Developer",
+    "Full Stack Developer",
+    "Java Developer",
+    "Python Developer",
+    "Go Developer",
+    "Node.js Developer",
+    "React Developer",
+    "Angular Developer",
+    "Mobile App Developer",
+    "Android Developer",
+    "iOS Developer",
+    "DevOps Engineer",
+    "Cloud Engineer",
+    "Site Reliability Engineer (SRE)",
+    "Data Analyst",
+    "Data Engineer",
+    "AI Engineer",
+    "Machine Learning Engineer",
+    "Cybersecurity Analyst",
+    "QA Engineer",
+    "Automation Tester",
+    "System Administrator",
+    "Network Engineer",
+    "UI/UX Designer",
+    "Product Designer",
+    "Game Developer",
+    "Blockchain Developer",
+    "Embedded Engineer",
+}
+
+NON_TECH_ROLES = {
+    "Business Analyst",
+    "Product Manager",
+    "Project Manager",
+    "Operations Manager",
+    "HR Executive",
+    "HR Manager",
+    "Talent Acquisition Specialist",
+    "Recruiter",
+    "Training Coordinator",
+    "Customer Success Manager",
+    "Administrative Assistant",
+    "Executive Assistant",
+    "Office Manager",
+    "Content Writer",
+    "Technical Writer",
+    "Research Analyst",
+    "Legal Associate",
+    "Consultant",
+    "Financial Analyst",
+    "Accountant",
+    "Auditor",
+}
+
+SALES_MARKETING_ROLES = {
+    "Sales Executive",
+    "Sales Manager",
+    "Business Development Executive",
+    "Business Development Manager",
+    "Inside Sales Representative",
+    "Account Executive",
+    "Account Manager",
+    "Marketing Executive",
+    "Digital Marketing Specialist",
+    "SEO Specialist",
+    "SEM Specialist",
+    "Social Media Manager",
+    "Brand Manager",
+    "Growth Marketer",
+    "Email Marketing Specialist",
+    "Market Research Analyst",
+    "Advertising Specialist",
+}
+
+CATEGORY_SKILLS = {
+    "tech": {
+        "project",
+        "api",
+        "database",
+        "testing",
+        "git",
+        "cloud",
+        "security",
+        "python",
+        "javascript",
+        "sql",
+    },
+    "non_tech": {
+        "analysis",
+        "stakeholder",
+        "management",
+        "reporting",
+        "operations",
+        "communication",
+        "planning",
+        "process",
+        "research",
+        "documentation",
+    },
+    "sales_marketing": {
+        "sales",
+        "marketing",
+        "lead generation",
+        "crm",
+        "campaign",
+        "seo",
+        "social media",
+        "analytics",
+        "customer",
+        "revenue",
+    },
+}
+
 
 def normalize(text):
     return re.sub(r"\s+", " ", text.lower()).strip()
 
 
+def get_role_skills(job_role):
+    if job_role in ROLE_SKILLS:
+        return ROLE_SKILLS[job_role]
+    if job_role in TECH_ROLES:
+        return CATEGORY_SKILLS["tech"]
+    if job_role in NON_TECH_ROLES:
+        return CATEGORY_SKILLS["non_tech"]
+    if job_role in SALES_MARKETING_ROLES:
+        return CATEGORY_SKILLS["sales_marketing"]
+    return ROLE_SKILLS["Software Engineer"]
+
+
 def predict_resume(resume_text, job_role):
     text = normalize(resume_text)
-    required_skills = ROLE_SKILLS.get(job_role, ROLE_SKILLS["Software Engineer"])
+    required_skills = get_role_skills(job_role)
 
     matched = sorted(skill for skill in required_skills if skill in text)
     missing = sorted(required_skills - set(matched))

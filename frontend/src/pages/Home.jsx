@@ -16,6 +16,7 @@ import {
   smartSearch
 } from "../services/appService.js";
 import { screenResume } from "../services/resumeService.js";
+import { defaultRole, defaultRoleCategory } from "../components/ResumeUpload.jsx";
 
 const initialAuthForm = { name: "", email: "", password: "" };
 const initialTaskForm = { title: "", description: "", deadline: "", importance: "Medium" };
@@ -51,7 +52,8 @@ export default function Home() {
   });
 
   const [resumeFile, setResumeFile] = useState(null);
-  const [resumeRole, setResumeRole] = useState("Software Engineer");
+  const [resumeRoleCategory, setResumeRoleCategory] = useState(defaultRoleCategory);
+  const [resumeRole, setResumeRole] = useState(defaultRole);
   const [resumeResult, setResumeResult] = useState(null);
   const [resumeLoading, setResumeLoading] = useState(false);
 
@@ -247,6 +249,7 @@ export default function Home() {
       }}
       resume={{
         file: resumeFile,
+        roleCategory: resumeRoleCategory,
         jobRole: resumeRole,
         loading: resumeLoading,
         result: resumeResult
@@ -271,6 +274,7 @@ export default function Home() {
         askPdf,
         changePdf: (event) => setPdfForm({ ...pdfForm, [event.target.name]: event.target.value }),
         setResumeFile,
+        setResumeRoleCategory,
         setResumeRole,
         screenResume: handleResumeSubmit
       }}
