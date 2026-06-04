@@ -196,16 +196,10 @@ function renderRoutePage(routeId, tools, forms, resume, outputs, handlers, loadi
       <AtsReportPage atsScore={atsScore} matched={matched} missing={missing} resume={resume} navigate={navigate} />
     ),
     "skills-analysis": (
-      <section className="analysis-grid page-grid">
-        <SkillsCard matched={matched} missing={missing} navigate={navigate} />
-        <LearningCard missing={missing} />
-      </section>
+      <SkillsAnalysisPage matched={matched} missing={missing} resume={resume} navigate={navigate} />
     ),
     "keyword-optimizer": (
-      <section className="analysis-grid page-grid">
-        <KeywordCard matched={matched} navigate={navigate} />
-        <SuggestionsCard navigate={navigate} />
-      </section>
+      <KeywordOptimizerPage matched={matched} missing={missing} resume={resume} navigate={navigate} />
     ),
     "cover-letter": <CoverLetterModule navigate={navigate} />,
     "resume-builder": (
@@ -454,6 +448,92 @@ function SkillsCard({ matched, missing, navigate }) {
   );
 }
 
+function SkillsAnalysisPage({ matched, missing, resume, navigate }) {
+  const totalSkills = matched.length + missing.length;
+  const matchRate = totalSkills ? Math.round((matched.length / totalSkills) * 100) : 82;
+  const recommended = (missing.length ? missing : ["system design", "leadership", "metrics", "ownership"]).slice(0, 6);
+
+  return (
+    <div className="skill-report page-grid">
+      <section className="tool-hero">
+        <div>
+          <span>Skills Intelligence</span>
+          <h2>{matchRate}% role skill alignment</h2>
+          <p>
+            Skill analysis for <strong>{resume.jobRole}</strong>. Review matched skills, missing skills and improvement actions
+            before applying.
+          </p>
+          <div className="ats-actions">
+            <button onClick={() => navigate("/learning-hub")} type="button">Create Learning Plan</button>
+            <button className="ghost-button" onClick={() => navigate("/keyword-optimizer")} type="button">Optimize Keywords</button>
+          </div>
+        </div>
+        <div className="tool-score-card">
+          <ScoreRing value={matchRate} tone={matchRate >= 70 ? "green" : "purple"} />
+          <strong>{matched.length} matched skills</strong>
+          <span>{missing.length} gaps detected</span>
+        </div>
+      </section>
+
+      <section className="workspace-summary">
+        <StatCard label="Matched" value={matched.length} detail="Skills found in resume" />
+        <StatCard label="Missing" value={missing.length} detail="Recommended additions" />
+        <StatCard label="Priority" value={missing.length > 4 ? "High" : "Medium"} detail="Improvement effort" />
+        <StatCard label="Role Fit" value={`${matchRate}%`} detail={resume.jobRole} />
+      </section>
+
+      <section className="analysis-grid">
+        <Card className="wide">
+          <CardTitle title="Matched Skills" />
+          <div className="clickable-skill-grid">
+            {matched.slice(0, 12).map((skill, index) => (
+              <button key={skill} onClick={() => navigate("/keyword-optimizer")} type="button">
+                <span>{skill}</span>
+                <em>{Math.max(72, 96 - index * 3)}%</em>
+              </button>
+            ))}
+          </div>
+        </Card>
+
+        <Card>
+          <CardTitle title="Skill Gaps" />
+          <div className="missing-action-list">
+            {recommended.map((skill) => (
+              <button key={skill} onClick={() => navigate("/learning-hub")} type="button">
+                <strong>{skill}</strong>
+                <span>Add proof, project or certification</span>
+              </button>
+            ))}
+          </div>
+        </Card>
+
+        <Card>
+          <CardTitle title="Skill Depth" />
+          <div className="ats-breakdown">
+            {[["Core skills", matchRate], ["Tool coverage", Math.max(58, matchRate - 6)], ["Project proof", 78], ["Business impact", 72]].map(([label, value]) => (
+              <div className="ats-breakdown-row compact-row" key={label}>
+                <div><strong>{label}</strong></div>
+                <i><b style={{ width: `${value}%` }} /></i>
+                <em>{value}%</em>
+              </div>
+            ))}
+          </div>
+        </Card>
+
+        <Card className="wide">
+          <CardTitle title="Recommended Actions" />
+          <div className="recommendation-grid">
+            <Suggestion title="Add Skill Evidence" copy="Mention where each important skill was used, not only the skill name." tag="High" />
+            <Suggestion title="Group Skills Clearly" copy="Separate Languages, Frameworks, Tools and Soft Skills for fast scanning." tag="Medium" />
+            <Suggestion title="Show Project Proof" copy="Add project links, outcomes and responsibility for missing skills." tag="High" />
+            <Suggestion title="Prepare Interview Stories" copy="Convert top skills into STAR-format interview answers." tag="Low" />
+          </div>
+        </Card>
+      </section>
+    </div>
+  );
+}
+
 function KeywordCard({ matched, navigate }) {
   return (
     <Card>
@@ -465,6 +545,84 @@ function KeywordCard({ matched, navigate }) {
       </div>
       <button onClick={() => navigate("/smart-search")} type="button">Search Keyword Usage</button>
     </Card>
+  );
+}
+
+function KeywordOptimizerPage({ matched, missing, resume, navigate }) {
+  const primaryKeywords = matched.slice(0, 10);
+  const missingKeywords = (missing.length ? missing : ["impact", "ownership", "metrics", "collaboration", "leadership"]).slice(0, 10);
+
+  return (
+    <div className="keyword-report page-grid">
+      <section className="tool-hero keyword-hero">
+        <div>
+          <span>Keyword Optimizer</span>
+          <h2>Improve recruiter and ATS keyword coverage</h2>
+          <p>
+            Tune your resume for <strong>{resume.jobRole}</strong> by balancing role keywords, action verbs,
+            measurable outcomes and job-description language.
+          </p>
+          <div className="ats-actions">
+            <button onClick={() => navigate("/resume-checker")} type="button">Rescreen Resume</button>
+            <button className="ghost-button" onClick={() => navigate("/cover-letter")} type="button">Use in Cover Letter</button>
+          </div>
+        </div>
+        <div className="keyword-score">
+          <strong>{Math.min(96, 62 + primaryKeywords.length * 3)}%</strong>
+          <span>keyword coverage</span>
+          <p>{missingKeywords.length} terms recommended</p>
+        </div>
+      </section>
+
+      <section className="analysis-grid">
+        <Card className="wide">
+          <CardTitle title="Detected Role Keywords" />
+          <div className="keyword-cloud professional">
+            {primaryKeywords.map((keyword) => (
+              <button key={keyword} onClick={() => navigate("/skills-analysis")} type="button">{keyword}</button>
+            ))}
+          </div>
+        </Card>
+
+        <Card>
+          <CardTitle title="Add These Keywords" />
+          <div className="keyword-cloud missing-keywords">
+            {missingKeywords.map((keyword) => (
+              <button key={keyword} onClick={() => navigate("/learning-hub")} type="button">{keyword}</button>
+            ))}
+          </div>
+        </Card>
+
+        <Card>
+          <CardTitle title="Keyword Placement" />
+          <ul className="ats-checklist">
+            <li className="pass">Skills section contains role keywords</li>
+            <li className="warn">Add 2-3 keywords in summary</li>
+            <li className="warn">Add missing terms inside project bullets</li>
+            <li className="pass">Avoid keyword stuffing</li>
+          </ul>
+        </Card>
+
+        <Card className="wide">
+          <CardTitle title="Optimization Plan" />
+          <div className="keyword-plan">
+            {[
+              ["Summary", "Add target role, top skills and one achievement metric."],
+              ["Experience", "Place keywords inside action bullets with measurable outcomes."],
+              ["Projects", "Mention tools, domain, scale and business impact."],
+              ["Skills", "Group keywords by language, framework, tools and soft skills."]
+            ].map(([title, copy]) => (
+              <button key={title} onClick={() => navigate("/resume-builder")} type="button">
+                <strong>{title}</strong>
+                <span>{copy}</span>
+              </button>
+            ))}
+          </div>
+        </Card>
+
+        <SuggestionsCard navigate={navigate} />
+      </section>
+    </div>
   );
 }
 
