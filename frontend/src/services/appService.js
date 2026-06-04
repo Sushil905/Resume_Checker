@@ -66,3 +66,10 @@ export async function createPdfAssistant(payload) {
   const { data } = await api.post("/productivity/pdf", payload);
   return data;
 }
+
+export async function uploadPdfDocument(file) {
+  const form = new FormData();
+  form.append("document", file);
+  const { data } = await api.post("/productivity/pdf/upload", form);
+  return data;
+}

@@ -13,7 +13,8 @@ import {
   login,
   register,
   setAuthToken,
-  smartSearch
+  smartSearch,
+  uploadPdfDocument
 } from "../services/appService.js";
 import { screenResume } from "../services/resumeService.js";
 import { defaultRole, defaultRoleCategory } from "../components/ResumeUpload.jsx";
@@ -41,6 +42,7 @@ export default function Home() {
   const [searchQuery, setSearchQuery] = useState("");
   const [interviewForm, setInterviewForm] = useState({ role: "Software Engineer", answer: "" });
   const [pdfForm, setPdfForm] = useState({ title: "", content: "", question: "" });
+  const [pdfUpload, setPdfUpload] = useState({ file: null, status: "" });
   const [outputs, setOutputs] = useState({
     subtasks: [],
     schedule: [],
@@ -202,6 +204,37 @@ export default function Home() {
     });
   }
 
+  async function handlePdfUpload(file) {
+    if (!file) {
+      setPdfUpload({ file: null, status: "" });
+      return;
+    }
+
+    setLoading(true);
+    setError("");
+    setPdfUpload({ file, status: "Extracting document text..." });
+
+    try {
+      const response = await uploadPdfDocument(file);
+      setPdfForm((current) => ({
+        ...current,
+        title: current.title || response.fileName || file.name,
+        content: response.content || current.content
+      }));
+      setPdfUpload({
+        file,
+        status: `Uploaded ${response.fileName || file.name} and extracted ${response.wordCount || 0} words.`
+      });
+    } catch (err) {
+      setPdfUpload({
+        file,
+        status: err.response?.data?.message || "Could not extract this file. Try another PDF/DOCX/TXT or paste text manually."
+      });
+    } finally {
+      setLoading(false);
+    }
+  }
+
   async function handleResumeSubmit(event) {
     event.preventDefault();
     if (!resumeFile) return;
@@ -273,11 +306,13 @@ export default function Home() {
         changeInterview: (event) => setInterviewForm({ ...interviewForm, [event.target.name]: event.target.value }),
         askPdf,
         changePdf: (event) => setPdfForm({ ...pdfForm, [event.target.name]: event.target.value }),
+        uploadPdf: (event) => handlePdfUpload(event.target.files?.[0] || null),
         setResumeFile,
         setResumeRoleCategory,
         setResumeRole,
         screenResume: handleResumeSubmit
       }}
+      pdfUpload={pdfUpload}
       onNavigate={navigate}
       route={route}
     />

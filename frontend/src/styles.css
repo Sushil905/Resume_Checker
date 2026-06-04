@@ -1929,6 +1929,67 @@ button:disabled {
   font-size: 13px;
 }
 
+.pdf-upload-zone {
+  display: grid;
+  grid-template-columns: minmax(220px, 0.48fr) minmax(0, 1fr);
+  gap: 12px;
+  align-items: stretch;
+  margin-bottom: 14px;
+  padding: 13px;
+  border: 1px dashed rgba(57, 194, 255, 0.42);
+  border-radius: 10px;
+  background:
+    radial-gradient(circle at 10% 20%, rgba(57, 194, 255, 0.13), transparent 32%),
+    rgba(0, 66, 155, 0.14);
+}
+
+.pdf-upload-zone label {
+  display: grid;
+  align-content: center;
+  gap: 9px;
+  min-height: 96px;
+  padding: 12px;
+  border: 1px solid rgba(36, 128, 255, 0.36);
+  border-radius: 9px;
+  background: rgba(2, 14, 34, 0.7);
+  color: #ffffff;
+  cursor: pointer;
+}
+
+.pdf-upload-zone label span {
+  color: #7fe4ff;
+  font-size: 13px;
+  font-weight: 900;
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
+}
+
+.pdf-upload-zone input[type="file"] {
+  padding: 9px;
+  border-style: dashed;
+  cursor: pointer;
+}
+
+.pdf-upload-zone > div {
+  display: grid;
+  align-content: center;
+  gap: 6px;
+  min-width: 0;
+}
+
+.pdf-upload-zone strong {
+  color: #ffffff;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.pdf-upload-zone p {
+  margin: 0;
+  color: #9fb0c6;
+  line-height: 1.5;
+}
+
 .ai-command-grid {
   display: grid;
   grid-template-columns: repeat(3, minmax(0, 1fr));
@@ -3336,6 +3397,7 @@ button:disabled {
   .ai-workbench-grid,
   .smart-search-layout,
   .rag-layout,
+  .pdf-upload-zone,
   .match-metric-grid,
   .ats-breakdown-row,
   .recommendation-grid,

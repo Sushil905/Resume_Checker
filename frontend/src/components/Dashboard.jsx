@@ -199,6 +199,7 @@ export default function Dashboard({
   outputs,
   handlers,
   loading,
+  pdfUpload,
   error,
   route,
   onNavigate
@@ -278,14 +279,14 @@ export default function Dashboard({
         </header>
 
         <PageHeader route={activeRoute} error={error} user={user} />
-        {renderRoutePage(activeRoute.id, routeTools, forms, resume, outputs, handlers, loading, onNavigate)}
+        {renderRoutePage(activeRoute.id, routeTools, forms, resume, outputs, handlers, loading, onNavigate, pdfUpload)}
         <footer className="dashboard-footer">© 2026 AI Resume Checker. All rights reserved.</footer>
       </section>
     </main>
   );
 }
 
-function renderRoutePage(routeId, tools, forms, resume, outputs, handlers, loading, navigate) {
+function renderRoutePage(routeId, tools, forms, resume, outputs, handlers, loading, navigate, pdfUpload) {
   const { tasks, notes, goals, atsScore, matchScore, matched, missing } = tools;
 
   const pages = {
@@ -345,7 +346,7 @@ function renderRoutePage(routeId, tools, forms, resume, outputs, handlers, loadi
     analytics: <AnalyticsPage atsScore={atsScore} goals={goals} matchScore={matchScore} navigate={navigate} notes={notes} tasks={tasks} />,
     "market-insights": <MarketInsightsModule matched={matched} missing={missing} navigate={navigate} resume={resume} />,
     "ai-assistant": <AIAssistantPage forms={forms} goals={goals} handlers={handlers} loading={loading} navigate={navigate} notes={notes} outputs={outputs} tasks={tasks} />,
-    "rag-pdf": <PdfModule forms={forms} handlers={handlers} loading={loading} navigate={navigate} outputs={outputs} />,
+    "rag-pdf": <PdfModule forms={forms} handlers={handlers} loading={loading} navigate={navigate} outputs={outputs} pdfUpload={pdfUpload} />,
     "smart-search": <SearchModule forms={forms} handlers={handlers} loading={loading} navigate={navigate} outputs={outputs} />
   };
 
@@ -1644,7 +1645,7 @@ function SearchModule({ forms, handlers, loading, navigate, outputs }) {
   );
 }
 
-function PdfModule({ forms, handlers, loading, navigate, outputs }) {
+function PdfModule({ forms, handlers, loading, navigate, outputs, pdfUpload }) {
   const pdfUseCases = [
     ["Resume Review", "Ask questions from uploaded resume or job description."],
     ["Study Notes", "Summarize long PDF notes into key points and actions."],
@@ -1673,13 +1674,23 @@ function PdfModule({ forms, handlers, loading, navigate, outputs }) {
       <section className="rag-layout">
         <Card className="wide">
           <CardTitle title="Ask Your PDF" />
-        <form className="stack-form" onSubmit={handlers.askPdf}>
-          <input name="title" value={forms.pdf.title} onChange={handlers.changePdf} placeholder="PDF title" />
-          <textarea name="content" value={forms.pdf.content} onChange={handlers.changePdf} placeholder="Paste extracted PDF content" />
-          <input name="question" value={forms.pdf.question} onChange={handlers.changePdf} placeholder="Ask question from PDF" />
-          <button disabled={loading}>Ask PDF AI</button>
-        </form>
-        <List items={[outputs.pdfAnswer].filter(Boolean)} />
+          <div className="pdf-upload-zone">
+            <label>
+              <span>Upload PDF / DOCX / TXT</span>
+              <input accept=".pdf,.docx,.txt" onChange={handlers.uploadPdf} type="file" />
+            </label>
+            <div>
+              <strong>{pdfUpload?.file?.name || "No document selected"}</strong>
+              <p>{pdfUpload?.status || "Upload a document to auto-extract text, then ask a question from it."}</p>
+            </div>
+          </div>
+          <form className="stack-form" onSubmit={handlers.askPdf}>
+            <input name="title" value={forms.pdf.title} onChange={handlers.changePdf} placeholder="PDF title" />
+            <textarea name="content" value={forms.pdf.content} onChange={handlers.changePdf} placeholder="Paste extracted PDF content" />
+            <input name="question" value={forms.pdf.question} onChange={handlers.changePdf} placeholder="Ask question from PDF" />
+            <button disabled={loading}>Ask PDF AI</button>
+          </form>
+          <List items={[outputs.pdfAnswer].filter(Boolean)} />
         </Card>
 
         <Card>

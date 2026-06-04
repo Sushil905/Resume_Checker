@@ -28,5 +28,23 @@ def predict():
     return jsonify(predict_resume(resume_text, job_role))
 
 
+@app.post("/extract")
+def extract_document_text():
+    if "document" not in request.files:
+        return jsonify({"message": "Document file is required"}), 400
+
+    document_file = request.files["document"]
+    document_text = extract_text(document_file)
+
+    if not document_text.strip():
+        return jsonify({"message": "Could not read text from document"}), 422
+
+    return jsonify({
+        "fileName": document_file.filename,
+        "content": document_text,
+        "wordCount": len(document_text.split())
+    })
+
+
 if __name__ == "__main__":
     app.run(host="0.0.0.0", port=8000, debug=True)

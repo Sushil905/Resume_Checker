@@ -1,3 +1,6 @@
+import axios from "axios";
+import fs from "fs";
+import FormData from "form-data";
 import { db } from "../config/db.js";
 import {
   answerFromDocument,
@@ -9,6 +12,8 @@ import {
   prioritizeTask,
   summarizeNotes
 } from "../services/productivityAi.js";
+
+const ML_SERVICE_URL = process.env.ML_SERVICE_URL || "http://localhost:8000";
 
 export async function getOverview(req, res, next) {
   try {
@@ -240,5 +245,33 @@ export async function createPdfDocument(req, res, next) {
     });
   } catch (error) {
     next(error);
+  }
+}
+
+export async function extractPdfDocument(req, res, next) {
+  try {
+    if (!req.file) {
+      res.status(400).json({ message: "Document file is required" });
+      return;
+    }
+
+    const form = new FormData();
+    form.append("document", fs.createReadStream(req.file.path), req.file.originalname);
+
+    const { data } = await axios.post(`${ML_SERVICE_URL}/extract`, form, {
+      headers: form.getHeaders()
+    });
+
+    res.json(data);
+  } catch (error) {
+    if (error.response?.data) {
+      res.status(error.response.status || 502).json(error.response.data);
+      return;
+    }
+    next(error);
+  } finally {
+    if (req.file?.path) {
+      fs.unlink(req.file.path, () => {});
+    }
   }
 }
