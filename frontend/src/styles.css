@@ -1664,7 +1664,8 @@ button:disabled {
 
 .skill-report,
 .keyword-report,
-.career-tool-page {
+.career-tool-page,
+.job-prep-page {
   display: grid;
   gap: 16px;
 }
@@ -1704,6 +1705,12 @@ button:disabled {
 .career-hero {
   background:
     radial-gradient(circle at 84% 20%, rgba(255, 196, 107, 0.12), transparent 30%),
+    linear-gradient(145deg, rgba(6, 19, 45, 0.95), rgba(2, 9, 25, 0.94));
+}
+
+.prep-hero {
+  background:
+    radial-gradient(circle at 84% 20%, rgba(33, 241, 122, 0.12), transparent 30%),
     linear-gradient(145deg, rgba(6, 19, 45, 0.95), rgba(2, 9, 25, 0.94));
 }
 
@@ -1827,6 +1834,108 @@ button:disabled {
 .option-stack button {
   padding: 11px 12px;
   color: #80d7ff;
+}
+
+.option-stack a {
+  padding: 11px 12px;
+  border: 1px solid rgba(36, 128, 255, 0.4);
+  border-radius: 9px;
+  background: rgba(0, 66, 155, 0.2);
+  color: #80d7ff;
+  text-decoration: none;
+}
+
+.resource-grid {
+  display: grid;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  gap: 12px;
+}
+
+.resource-grid a {
+  display: grid;
+  gap: 8px;
+  min-height: 150px;
+  padding: 15px;
+  border: 1px solid rgba(36, 128, 255, 0.42);
+  border-radius: 10px;
+  background:
+    radial-gradient(circle at 90% 10%, rgba(57, 194, 255, 0.14), transparent 28%),
+    rgba(0, 66, 155, 0.18);
+  color: #dce8ff;
+  text-decoration: none;
+}
+
+.resource-grid a strong {
+  color: #ffffff;
+  font-size: 16px;
+}
+
+.resource-grid a span {
+  color: #9fb0c6;
+  line-height: 1.45;
+}
+
+.resource-grid a em {
+  align-self: end;
+  color: #62caff;
+  font-style: normal;
+  font-weight: 900;
+}
+
+.prep-track-list {
+  display: grid;
+  gap: 10px;
+}
+
+.prep-track-list button {
+  display: grid;
+  gap: 6px;
+  padding: 12px;
+  border: 1px solid rgba(36, 128, 255, 0.4);
+  border-radius: 9px;
+  background: rgba(0, 66, 155, 0.2);
+  color: #dce8ff;
+  box-shadow: none;
+  text-align: left;
+}
+
+.prep-track-list button strong {
+  color: #ffffff;
+}
+
+.prep-track-list button span {
+  color: #9fb0c6;
+  font-size: 13px;
+}
+
+.roadmap-timeline {
+  display: grid;
+  grid-template-columns: repeat(4, minmax(0, 1fr));
+  gap: 16px;
+}
+
+.roadmap-timeline article {
+  display: grid;
+  gap: 14px;
+  padding: 18px;
+  border: 1px solid rgba(28, 121, 255, 0.42);
+  border-radius: 10px;
+  background: linear-gradient(145deg, rgba(6, 19, 45, 0.9), rgba(2, 9, 25, 0.94));
+}
+
+.roadmap-timeline article em {
+  width: max-content;
+  padding: 7px 10px;
+  border-radius: 999px;
+  background: rgba(33, 241, 122, 0.12);
+  color: #22f08a;
+  font-style: normal;
+  font-weight: 900;
+}
+
+.roadmap-timeline article strong {
+  color: #ffffff;
+  line-height: 1.45;
 }
 
 .resume-doc-preview {
@@ -2555,7 +2664,9 @@ button:disabled {
   }
 
   .career-workbench,
-  .version-grid {
+  .version-grid,
+  .resource-grid,
+  .roadmap-timeline {
     grid-template-columns: 1fr;
   }
 

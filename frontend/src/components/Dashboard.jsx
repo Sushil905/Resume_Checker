@@ -58,6 +58,48 @@ export const routeSections = [
 
 export const flatRoutes = routeSections.flatMap((section) => section.items);
 
+const learningResources = {
+  Technology: [
+    ["MDN Learn Web Development", "Frontend foundations, JavaScript, browser APIs and web standards.", "https://developer.mozilla.org/en-US/docs/Learn"],
+    ["freeCodeCamp", "Hands-on coding curriculum, projects and interview-friendly practice.", "https://www.freecodecamp.org/learn/"],
+    ["Google Cloud Skills Boost", "Cloud, data, DevOps and AI labs with practical exercises.", "https://www.cloudskillsboost.google/"]
+  ],
+  "Non-Technology": [
+    ["Atlassian Agile Coach", "Project management, agile, product delivery and team collaboration.", "https://www.atlassian.com/agile"],
+    ["PMI Learning", "Project management learning resources and professional frameworks.", "https://www.pmi.org/learning"],
+    ["HubSpot Academy", "Customer success, CRM, content, operations and business growth courses.", "https://academy.hubspot.com/"]
+  ],
+  "Sales & Marketing": [
+    ["Google Skillshop", "Google Ads, analytics and digital marketing product training.", "https://skillshop.withgoogle.com/"],
+    ["HubSpot Academy", "Inbound sales, CRM, email, content, SEO and marketing courses.", "https://academy.hubspot.com/"],
+    ["Meta Blueprint", "Social media marketing, ads, brand and campaign learning.", "https://www.facebook.com/business/learn"]
+  ],
+  "Freshers & Internships": [
+    ["National Career Service", "Government job portal for career guidance, jobs and employer discovery.", "https://www.ncs.gov.in/"],
+    ["freeCodeCamp Projects", "Build portfolio projects to prove skills as a fresher.", "https://www.freecodecamp.org/learn/"],
+    ["Google Cloud Skills Boost", "Beginner-friendly labs for cloud, AI and data career paths.", "https://www.cloudskillsboost.google/"]
+  ],
+  Government: [
+    ["UPSC Official", "Official exam notifications, syllabus, recruitment and candidate information.", "https://upsc.gov.in/"],
+    ["SSC Official", "Official Staff Selection Commission notices, exams and candidate updates.", "https://ssc.gov.in/"],
+    ["National Career Service", "Government career services, jobs, counselling and skill resources.", "https://www.ncs.gov.in/"]
+  ]
+};
+
+const interviewTracks = [
+  ["HR Round", "Tell me about yourself, strengths, weakness and career goals."],
+  ["Technical / Functional", "Role-specific concepts, projects, tools and problem solving."],
+  ["Managerial Round", "Ownership, teamwork, conflict handling and decision making."],
+  ["Final Pitch", "Why this role, why this company and expected contribution."]
+];
+
+const roadmapTracks = [
+  ["Week 1", "Fix resume keywords, add missing skills and prepare role stories."],
+  ["Week 2", "Build one portfolio proof project or case study."],
+  ["Week 3", "Practice interviews and refine answers using feedback."],
+  ["Week 4", "Apply, track jobs and follow up with tailored cover letters."]
+];
+
 export function getRouteByPath(pathname) {
   return flatRoutes.find((item) => item.path === pathname) || flatRoutes[0];
 }
@@ -205,9 +247,9 @@ function renderRoutePage(routeId, tools, forms, resume, outputs, handlers, loadi
     "resume-builder": <ResumeBuilderPage matched={matched} missing={missing} navigate={navigate} />,
     "resume-versions": <ResumeVersionsPage resume={resume} navigate={navigate} />,
     "portfolio-analyzer": <PortfolioAnalyzerPage matched={matched} missing={missing} navigate={navigate} />,
-    "interview-prep": <InterviewModule forms={forms} handlers={handlers} loading={loading} outputs={outputs} />,
-    "career-roadmap": <RoadmapModule />,
-    "learning-hub": <LearningCard missing={missing} />,
+    "interview-prep": <InterviewModule forms={forms} handlers={handlers} loading={loading} outputs={outputs} navigate={navigate} resume={resume} />,
+    "career-roadmap": <RoadmapModule navigate={navigate} resume={resume} />,
+    "learning-hub": <LearningCard missing={missing} navigate={navigate} resume={resume} />,
     "job-match": (
       <section className="analysis-grid page-grid">
         <JobMatchCard matchScore={matchScore} resume={resume} navigate={navigate} />
@@ -835,46 +877,155 @@ function PortfolioAnalyzerPage({ matched, missing, navigate }) {
   );
 }
 
-function InterviewModule({ forms, handlers, loading, outputs }) {
+function InterviewModule({ forms, handlers, loading, outputs, navigate, resume }) {
   return (
-    <section className="productivity-dock page-modules">
-      <Module title="Interview Preparation">
-        <form className="stack-form" onSubmit={handlers.createInterview}>
-          <input name="role" value={forms.interview.role} onChange={handlers.changeInterview} placeholder="Target role" />
-          <textarea name="answer" value={forms.interview.answer} onChange={handlers.changeInterview} placeholder="Practice answer for AI feedback" />
-          <button disabled={loading}>Generate Questions</button>
-        </form>
-        <List items={[...outputs.interviewQuestions, outputs.interviewFeedback].filter(Boolean)} />
-      </Module>
-    </section>
+    <div className="job-prep-page page-grid">
+      <section className="tool-hero prep-hero">
+        <div>
+          <span>Job Preparation</span>
+          <h2>Interview Prep Studio</h2>
+          <p>Practice structured answers for {resume.jobRole}, generate role-based questions and build confidence for HR, technical and final rounds.</p>
+          <div className="ats-actions">
+            <button onClick={() => navigate("/career-roadmap")} type="button">View Roadmap</button>
+            <button className="ghost-button" onClick={() => navigate("/learning-hub")} type="button">Open Learning Hub</button>
+          </div>
+        </div>
+        <div className="tool-score-card">
+          <strong>4 Rounds</strong>
+          <span>Preparation flow</span>
+          <p>{resume.jobRole}</p>
+        </div>
+      </section>
+
+      <section className="analysis-grid">
+        <Card className="wide">
+          <CardTitle title="AI Practice Session" />
+          <form className="stack-form" onSubmit={handlers.createInterview}>
+            <input name="role" value={forms.interview.role} onChange={handlers.changeInterview} placeholder="Target role" />
+            <textarea name="answer" value={forms.interview.answer} onChange={handlers.changeInterview} placeholder="Paste your practice answer for AI feedback" />
+            <button disabled={loading}>Generate Questions and Feedback</button>
+          </form>
+          <List items={[...outputs.interviewQuestions, outputs.interviewFeedback].filter(Boolean)} />
+        </Card>
+        <Card>
+          <CardTitle title="Interview Tracks" />
+          <div className="prep-track-list">
+            {interviewTracks.map(([title, copy]) => (
+              <button key={title} onClick={() => navigate("/learning-hub")} type="button">
+                <strong>{title}</strong>
+                <span>{copy}</span>
+              </button>
+            ))}
+          </div>
+        </Card>
+        <Card>
+          <CardTitle title="Practice Checklist" />
+          <ul className="ats-checklist">
+            <li className="pass">Resume walkthrough ready</li>
+            <li className="warn">Prepare 3 measurable achievements</li>
+            <li className="warn">Practice role-specific questions</li>
+            <li className="pass">Prepare closing questions</li>
+          </ul>
+        </Card>
+      </section>
+    </div>
   );
 }
 
-function RoadmapModule() {
+function RoadmapModule({ navigate, resume }) {
   return (
-    <section className="productivity-dock page-modules">
-      <Module title="Career Roadmap">
-        <div className="feature-card-copy">
-          <strong>Role-based growth path</strong>
-          <p>AI maps your current skills to weekly milestones, projects and interview goals.</p>
+    <div className="job-prep-page page-grid">
+      <section className="tool-hero prep-hero">
+        <div>
+          <span>Job Preparation</span>
+          <h2>Career Roadmap</h2>
+          <p>A practical 4-week roadmap for {resume.jobRole}: resume proof, learning, portfolio, interview practice and applications.</p>
+          <div className="ats-actions">
+            <button onClick={() => navigate("/learning-hub")} type="button">Start Learning</button>
+            <button className="ghost-button" onClick={() => navigate("/job-tracker")} type="button">Track Applications</button>
+          </div>
         </div>
-        <List items={["Week 1: close missing keywords", "Week 2: build role project", "Week 3: interview practice"]} />
-      </Module>
-    </section>
+        <div className="keyword-score">
+          <strong>4</strong>
+          <span>week sprint</span>
+          <p>career execution plan</p>
+        </div>
+      </section>
+
+      <section className="roadmap-timeline">
+        {roadmapTracks.map(([week, copy], index) => (
+          <article key={week}>
+            <em>{week}</em>
+            <strong>{copy}</strong>
+            <button onClick={() => navigate(index < 2 ? "/learning-hub" : "/interview-prep")} type="button">
+              Open Step
+            </button>
+          </article>
+        ))}
+      </section>
+    </div>
   );
 }
 
-function LearningCard({ missing }) {
+function LearningCard({ missing, navigate, resume }) {
+  const resources = learningResources[resume.roleCategory] || learningResources.Technology;
+  const recommendedSkills = missing.length ? missing.slice(0, 6) : ["communication", "portfolio projects", "interview practice", "role keywords"];
+
   return (
-    <section className="productivity-dock page-modules">
-      <Module title="Learning Hub">
-        <div className="feature-card-copy">
-          <strong>Personalized learning queue</strong>
-          <p>Converts missing skills into courses, practice tasks and daily study blocks.</p>
+    <div className="job-prep-page page-grid">
+      <section className="tool-hero prep-hero">
+        <div>
+          <span>Job Preparation</span>
+          <h2>Learning Hub</h2>
+          <p>Curated real-world resources for {resume.roleCategory} roles, plus a personal skill queue based on your resume gaps.</p>
+          <div className="ats-actions">
+            <button onClick={() => navigate("/career-roadmap")} type="button">Build Roadmap</button>
+            <button className="ghost-button" onClick={() => navigate("/interview-prep")} type="button">Practice Interview</button>
+          </div>
         </div>
-        <List items={missing.slice(0, 4).map((skill) => `Learn ${skill}`)} />
-      </Module>
-    </section>
+        <div className="tool-score-card">
+          <strong>{resources.length}</strong>
+          <span>verified resources</span>
+          <p>{recommendedSkills.length} skill targets</p>
+        </div>
+      </section>
+
+      <section className="analysis-grid">
+        <Card className="wide">
+          <CardTitle title={`${resume.roleCategory} Resources`} />
+          <div className="resource-grid">
+            {resources.map(([title, copy, url]) => (
+              <a href={url} key={title} rel="noreferrer" target="_blank">
+                <strong>{title}</strong>
+                <span>{copy}</span>
+                <em>Open resource</em>
+              </a>
+            ))}
+          </div>
+        </Card>
+
+        <Card>
+          <CardTitle title="Personal Skill Queue" />
+          <div className="missing-action-list">
+            {recommendedSkills.map((skill) => (
+              <button key={skill} onClick={() => navigate("/skills-analysis")} type="button">
+                <strong>{skill}</strong>
+                <span>Learn, practice and add proof to resume</span>
+              </button>
+            ))}
+          </div>
+        </Card>
+
+        <Card>
+          <CardTitle title="Resource Categories" />
+          <div className="option-stack">
+            {Object.keys(learningResources).map((category) => (
+              <a href={learningResources[category][0][2]} key={category} rel="noreferrer" target="_blank">{category}</a>
+            ))}
+          </div>
+        </Card>
+      </section>
+    </div>
   );
 }
 
