@@ -100,6 +100,69 @@ const learningHubSections = [
     ]
   },
   {
+    title: "Non-Tech Career Paths",
+    badge: "NT",
+    resources: [
+      ["Business Analyst", "Business analysis standards, role practices and certification path from IIBA.", "https://www.iiba.org/business-analysis-certifications/"],
+      ["Product Management", "Product strategy, roadmaps, discovery and product team practices.", "https://www.atlassian.com/agile/product-management"],
+      ["Project Management", "PMI learning resources for project planning, execution and delivery.", "https://www.pmi.org/learning"],
+      ["HR", "Human resources learning, people operations and workplace practices.", "https://www.shrm.org/resourcesandtools/tools-and-samples"],
+      ["Recruitment", "Recruiting strategy, hiring pipeline and talent acquisition learning.", "https://www.linkedin.com/business/talent/blog"],
+      ["Operations", "Operations management basics, process improvement and business execution.", "https://www.coursera.org/browse/business/business-strategy"],
+      ["Consulting", "Case interview preparation and consulting problem-solving practice.", "https://www.casecoach.com/"],
+      ["Finance", "Corporate finance, valuation, accounting and Excel learning paths.", "https://corporatefinanceinstitute.com/resources/"],
+      ["Accounting", "Accounting career resources, standards and professional development.", "https://www.aicpa-cima.com/resources"],
+      ["Content Writing", "Content marketing, writing strategy and editorial skill development.", "https://academy.hubspot.com/courses/content-marketing"],
+      ["Technical Writing", "Google technical writing courses for clear documentation.", "https://developers.google.com/tech-writing"],
+      ["Research Analyst", "Research discovery, academic search and source evaluation practice.", "https://scholar.google.com/"]
+    ]
+  },
+  {
+    title: "Sales & Marketing",
+    badge: "SM",
+    resources: [
+      ["Sales Executive", "Sales training, pipeline management and prospecting fundamentals.", "https://academy.hubspot.com/courses/sales-training"],
+      ["Business Development", "Business development, partnerships and growth strategy resources.", "https://www.linkedin.com/learning/topics/business-development"],
+      ["Digital Marketing", "Google digital marketing and ecommerce career certificate.", "https://grow.google/certificates/digital-marketing-ecommerce/"],
+      ["SEO", "Beginner-friendly SEO guide from Moz for search fundamentals.", "https://moz.com/beginners-guide-to-seo"],
+      ["SEM", "Google Ads learning and search engine marketing certifications.", "https://skillshop.withgoogle.com/"],
+      ["Social Media Marketing", "Meta Blueprint courses for social media and paid campaigns.", "https://www.facebook.com/business/learn"],
+      ["Brand Management", "Brand strategy and marketing learning resources.", "https://www.coursera.org/browse/business/marketing"],
+      ["Growth Marketing", "Growth, acquisition, conversion and experimentation learning.", "https://academy.hubspot.com/"],
+      ["Email Marketing", "Email marketing strategy, segmentation and automation resources.", "https://mailchimp.com/resources/email-marketing-field-guide/"],
+      ["Market Research", "Market research fundamentals, customer insights and survey methods.", "https://www.qualtrics.com/experience-management/research/market-research-guide/"]
+    ]
+  },
+  {
+    title: "Government Exams",
+    badge: "GE",
+    resources: [
+      ["UPSC", "Official UPSC notifications, syllabus, exam calendar and candidate updates.", "https://upsc.gov.in/"],
+      ["SSC", "Official Staff Selection Commission exam notices and candidate portal.", "https://ssc.gov.in/"],
+      ["Banking", "IBPS official recruitment and banking exam updates.", "https://www.ibps.in/"],
+      ["IBPS", "Official IBPS exams, notifications and recruitment information.", "https://www.ibps.in/"],
+      ["Railways", "Indian Railways recruitment and official career information.", "https://indianrailways.gov.in/"],
+      ["Police", "Ministry of Home Affairs resources and police service information.", "https://www.mha.gov.in/"],
+      ["Defence", "Official Indian Army career and officer entry information.", "https://joinindianarmy.nic.in/"],
+      ["State PSC", "State public service commission preparation and notifications tracker.", "https://www.ncs.gov.in/"],
+      ["Teaching Exams", "NTA official exam information for teaching and eligibility exams.", "https://nta.ac.in/"],
+      ["PSU Exams", "GATE official portal, commonly used for PSU technical recruitment.", "https://gate2026.iitg.ac.in/"]
+    ]
+  },
+  {
+    title: "Interview Preparation",
+    badge: "IP",
+    resources: [
+      ["Technical Interviews", "Coding interview preparation with algorithms and company-style problems.", "https://leetcode.com/problemset/"],
+      ["HR Interviews", "Google Interview Warmup for practicing answers and communication.", "https://grow.google/certificates/interview-warmup/"],
+      ["Group Discussion", "Communication and public speaking practice for discussions.", "https://www.toastmasters.org/resources/public-speaking-tips"],
+      ["Mock Interviews", "Peer mock interviews for coding, behavioral and product roles.", "https://www.pramp.com/"],
+      ["Aptitude", "Quantitative aptitude and placement-style practice questions.", "https://www.indiabix.com/aptitude/questions-and-answers/"],
+      ["Reasoning", "Logical reasoning and analytical practice for exams and placements.", "https://www.indiabix.com/logical-reasoning/questions-and-answers/"],
+      ["Communication Skills", "Business communication courses and professional speaking practice.", "https://www.coursera.org/browse/business/business-essentials"]
+    ]
+  },
+  {
     title: "Certifications",
     badge: "CR",
     resources: [
