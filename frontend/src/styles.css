@@ -1746,6 +1746,27 @@ button:disabled {
     linear-gradient(145deg, rgba(6, 19, 45, 0.96), rgba(2, 9, 25, 0.94));
 }
 
+.ai-hero {
+  background:
+    radial-gradient(circle at 84% 18%, rgba(57, 194, 255, 0.18), transparent 30%),
+    radial-gradient(circle at 12% 86%, rgba(132, 93, 255, 0.16), transparent 32%),
+    linear-gradient(145deg, rgba(6, 19, 45, 0.96), rgba(2, 9, 25, 0.94));
+}
+
+.rag-hero {
+  background:
+    radial-gradient(circle at 84% 18%, rgba(34, 240, 138, 0.14), transparent 30%),
+    radial-gradient(circle at 12% 86%, rgba(57, 194, 255, 0.16), transparent 32%),
+    linear-gradient(145deg, rgba(6, 19, 45, 0.96), rgba(2, 9, 25, 0.94));
+}
+
+.search-hero {
+  background:
+    radial-gradient(circle at 84% 18%, rgba(152, 93, 255, 0.17), transparent 30%),
+    radial-gradient(circle at 12% 86%, rgba(255, 196, 107, 0.13), transparent 32%),
+    linear-gradient(145deg, rgba(6, 19, 45, 0.96), rgba(2, 9, 25, 0.94));
+}
+
 .tool-hero span {
   color: #39c2ff;
   font-size: 13px;
@@ -1834,7 +1855,8 @@ button:disabled {
 .job-match-page,
 .job-tracker-page,
 .analytics-page,
-.market-page {
+.market-page,
+.ai-tools-page {
   display: grid;
   gap: 16px;
 }
@@ -1870,6 +1892,107 @@ button:disabled {
   color: #aebdd3;
   text-align: center;
   font-size: 13px;
+}
+
+.assistant-brain-card {
+  display: grid;
+  place-items: center;
+  align-content: center;
+  gap: 8px;
+  min-height: 230px;
+  border: 1px solid rgba(57, 194, 255, 0.34);
+  border-radius: 10px;
+  background:
+    radial-gradient(circle at 50% 28%, rgba(57, 194, 255, 0.22), transparent 42%),
+    rgba(1, 11, 27, 0.62);
+  box-shadow: inset 0 0 36px rgba(57, 194, 255, 0.12);
+}
+
+.assistant-brain-card strong {
+  color: #39c2ff;
+  font-size: 54px;
+  line-height: 1;
+}
+
+.assistant-brain-card span {
+  color: #ffffff;
+  font-size: 15px;
+  font-weight: 900;
+  text-align: center;
+}
+
+.assistant-brain-card p {
+  max-width: 220px;
+  margin: 0;
+  color: #aebdd3;
+  text-align: center;
+  font-size: 13px;
+}
+
+.ai-command-grid {
+  display: grid;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  gap: 14px;
+}
+
+.ai-command-grid button {
+  display: grid;
+  gap: 8px;
+  min-height: 118px;
+  padding: 18px;
+  border: 1px solid rgba(36, 128, 255, 0.38);
+  border-radius: 9px;
+  background:
+    radial-gradient(circle at 88% 18%, rgba(57, 194, 255, 0.13), transparent 34%),
+    rgba(0, 66, 155, 0.18);
+  color: #dce8ff;
+  box-shadow: none;
+  cursor: pointer;
+  text-align: left;
+  transition: border-color 180ms ease, transform 180ms ease, background 180ms ease;
+}
+
+.ai-command-grid button:hover {
+  border-color: #39c2ff;
+  background: rgba(0, 112, 255, 0.26);
+  transform: translateY(-2px);
+}
+
+.ai-command-grid button strong {
+  color: #ffffff;
+  font-size: 17px;
+}
+
+.ai-command-grid button span {
+  color: #9fb0c6;
+  font-size: 13px;
+  line-height: 1.45;
+}
+
+.ai-workbench-grid,
+.smart-search-layout,
+.rag-layout {
+  display: grid;
+  grid-template-columns: repeat(12, minmax(0, 1fr));
+  gap: 16px;
+}
+
+.ai-workbench-grid .module-panel,
+.smart-search-layout .analysis-card,
+.rag-layout .analysis-card {
+  grid-column: span 6;
+}
+
+.ai-workbench-grid .module-panel:nth-child(5),
+.ai-workbench-grid .analysis-card,
+.smart-search-layout .analysis-card.wide,
+.rag-layout .analysis-card.wide {
+  grid-column: span 8;
+}
+
+.smart-search-layout .analysis-card:not(.wide),
+.rag-layout .analysis-card:not(.wide) {
+  grid-column: span 4;
 }
 
 .analytics-kpi-grid {
@@ -3147,7 +3270,8 @@ button:disabled {
   .job-action-grid,
   .tracker-pipeline,
   .analytics-kpi-grid,
-  .analytics-funnel {
+  .analytics-funnel,
+  .ai-command-grid {
     grid-template-columns: 1fr;
   }
 
@@ -3209,6 +3333,9 @@ button:disabled {
   .tool-hero,
   .job-intelligence-grid,
   .analytics-grid,
+  .ai-workbench-grid,
+  .smart-search-layout,
+  .rag-layout,
   .match-metric-grid,
   .ats-breakdown-row,
   .recommendation-grid,
@@ -3231,6 +3358,13 @@ button:disabled {
 
   .role-picker {
     grid-template-columns: 1fr;
+  }
+
+  .ai-workbench-grid .module-panel,
+  .ai-workbench-grid .analysis-card,
+  .smart-search-layout .analysis-card,
+  .rag-layout .analysis-card {
+    grid-column: 1 / -1;
   }
 }
 

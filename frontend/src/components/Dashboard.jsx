@@ -49,9 +49,9 @@ export const routeSections = [
   {
     title: "AI Tools",
     items: [
-      { id: "ai-assistant", path: "/ai-assistant", label: "AI Assistant", badge: "AI" },
-      { id: "rag-pdf", path: "/rag-pdf", label: "RAG PDF Assistant", badge: "RA", tag: "AI" },
-      { id: "smart-search", path: "/smart-search", label: "Smart Search", badge: "Se" }
+      { id: "ai-assistant", path: "/ai-assistant", label: "AI Assistant", badge: "AI", tag: "GenAI", copy: "Plan, summarize and decide" },
+      { id: "rag-pdf", path: "/rag-pdf", label: "RAG PDF Assistant", badge: "RA", tag: "AI", copy: "Ask answers from documents" },
+      { id: "smart-search", path: "/smart-search", label: "Smart Search", badge: "Se", tag: "NLQ", copy: "Find anything naturally" }
     ]
   }
 ];
@@ -344,17 +344,9 @@ function renderRoutePage(routeId, tools, forms, resume, outputs, handlers, loadi
     "job-tracker": <JobTrackerModule navigate={navigate} />,
     analytics: <AnalyticsPage atsScore={atsScore} goals={goals} matchScore={matchScore} navigate={navigate} notes={notes} tasks={tasks} />,
     "market-insights": <MarketInsightsModule matched={matched} missing={missing} navigate={navigate} resume={resume} />,
-    "ai-assistant": (
-      <section className="productivity-dock page-modules">
-        <TaskModule forms={forms} handlers={handlers} loading={loading} tasks={tasks} />
-        <BreakdownModule forms={forms} handlers={handlers} loading={loading} outputs={outputs} tasks={tasks} />
-        <PlannerModule forms={forms} handlers={handlers} loading={loading} outputs={outputs} />
-        <NotesModule forms={forms} handlers={handlers} loading={loading} notes={notes} goals={goals} />
-        <GoalModule forms={forms} handlers={handlers} loading={loading} outputs={outputs} />
-      </section>
-    ),
-    "rag-pdf": <PdfModule forms={forms} handlers={handlers} loading={loading} outputs={outputs} />,
-    "smart-search": <SearchModule forms={forms} handlers={handlers} loading={loading} outputs={outputs} />
+    "ai-assistant": <AIAssistantPage forms={forms} goals={goals} handlers={handlers} loading={loading} navigate={navigate} notes={notes} outputs={outputs} tasks={tasks} />,
+    "rag-pdf": <PdfModule forms={forms} handlers={handlers} loading={loading} navigate={navigate} outputs={outputs} />,
+    "smart-search": <SearchModule forms={forms} handlers={handlers} loading={loading} navigate={navigate} outputs={outputs} />
   };
 
   return pages[routeId] || pages.dashboard;
@@ -1531,24 +1523,156 @@ function GoalModule({ forms, handlers, loading, outputs }) {
   );
 }
 
-function SearchModule({ forms, handlers, loading, outputs }) {
+function AIAssistantPage({ forms, goals, handlers, loading, navigate, notes, outputs, tasks }) {
+  const commandTiles = [
+    ["Prioritize Tasks", "Deadline and importance based priority engine", "/ai-assistant"],
+    ["Break Down Work", "Turn large tasks into smaller execution steps", "/ai-assistant"],
+    ["Daily Planner", "Create time-blocked schedule from available time", "/ai-assistant"],
+    ["Notes Summarizer", "Extract key points and action items from notes", "/ai-assistant"],
+    ["Goal Coach", "Convert goals into daily targets and checkpoints", "/career-roadmap"],
+    ["Smart Search", "Find tasks, notes, goals and resume signals naturally", "/smart-search"]
+  ];
+
   return (
-    <section className="productivity-dock page-modules">
-      <Module title="Smart Search">
-        <form className="stack-form" onSubmit={handlers.search}>
-          <input value={forms.search} onChange={handlers.changeSearch} placeholder="Find tasks or notes naturally" />
-          <button disabled={loading}>Search Workspace</button>
-        </form>
-        <List items={outputs.searchResults.map((item) => item.title || item.summary || item.type)} />
-      </Module>
-    </section>
+    <div className="ai-tools-page page-grid">
+      <section className="tool-hero ai-hero">
+        <div>
+          <span>AI Tools</span>
+          <h2>AI Assistant Command Center</h2>
+          <p>Ask the assistant to plan work, summarize notes, break big goals, search workspace data and guide your career actions.</p>
+          <div className="ats-actions">
+            <button onClick={() => navigate("/smart-search")} type="button">Ask Workspace</button>
+            <button className="ghost-button" onClick={() => navigate("/rag-pdf")} type="button">Ask PDF</button>
+          </div>
+        </div>
+        <div className="assistant-brain-card">
+          <strong>24/7</strong>
+          <span>smart assistant</span>
+          <p>{tasks.length || 3} tasks, {notes.length || 2} notes, {goals.length || 1} goals in context</p>
+        </div>
+      </section>
+
+      <section className="ai-command-grid">
+        {commandTiles.map(([title, copy, path]) => (
+          <button key={title} onClick={() => navigate(path)} type="button">
+            <strong>{title}</strong>
+            <span>{copy}</span>
+          </button>
+        ))}
+      </section>
+
+      <section className="ai-workbench-grid">
+        <TaskModule forms={forms} handlers={handlers} loading={loading} tasks={tasks} />
+        <BreakdownModule forms={forms} handlers={handlers} loading={loading} outputs={outputs} tasks={tasks} />
+        <PlannerModule forms={forms} handlers={handlers} loading={loading} outputs={outputs} />
+        <NotesModule forms={forms} handlers={handlers} loading={loading} notes={notes} goals={goals} />
+        <GoalModule forms={forms} handlers={handlers} loading={loading} outputs={outputs} />
+        <Card>
+          <CardTitle title="Assistant Capabilities" />
+          <ul className="ats-checklist">
+            <li className="pass">Understands tasks, notes, goals and resume workflows</li>
+            <li className="pass">Generates plans, summaries, priorities and next steps</li>
+            <li className="warn">Use RAG PDF for document-grounded answers</li>
+            <li className="warn">Use Smart Search for workspace-wide discovery</li>
+          </ul>
+        </Card>
+      </section>
+    </div>
   );
 }
 
-function PdfModule({ forms, handlers, loading, outputs }) {
+function SearchModule({ forms, handlers, loading, navigate, outputs }) {
+  const searchExamples = [
+    "Show overdue high priority tasks",
+    "Find notes about React interview prep",
+    "Which goals need action this week?",
+    "Search resume gaps related to cloud"
+  ];
+
   return (
-    <section className="productivity-dock page-modules">
-      <Module title="RAG PDF Assistant">
+    <div className="ai-tools-page page-grid">
+      <section className="tool-hero ai-hero search-hero">
+        <div>
+          <span>AI Tools</span>
+          <h2>Smart Search Intelligence</h2>
+          <p>Search your workspace using natural language. It can understand tasks, notes, goals, resume insights and PDF answers semantically.</p>
+          <div className="ats-actions">
+            <button onClick={() => navigate("/ai-assistant")} type="button">Open Assistant</button>
+            <button className="ghost-button" onClick={() => navigate("/rag-pdf")} type="button">Search PDFs</button>
+          </div>
+        </div>
+        <div className="assistant-brain-card">
+          <strong>NLQ</strong>
+          <span>natural language query</span>
+          <p>Meaning-based search across workspace data</p>
+        </div>
+      </section>
+
+      <section className="smart-search-layout">
+        <Card className="wide">
+          <CardTitle title="Ask Anything" />
+        <form className="stack-form" onSubmit={handlers.search}>
+            <input value={forms.search} onChange={handlers.changeSearch} placeholder="Example: find tasks related to resume improvement this week" />
+          <button disabled={loading}>Search Workspace</button>
+        </form>
+        <List items={outputs.searchResults.map((item) => item.title || item.summary || item.type)} />
+        </Card>
+
+        <Card>
+          <CardTitle title="Smart Prompts" />
+          <div className="market-keyword-grid">
+            {searchExamples.map((example) => (
+              <button key={example} onClick={() => navigate("/smart-search")} type="button">
+                <strong>{example}</strong>
+                <span>Natural language search example</span>
+              </button>
+            ))}
+          </div>
+        </Card>
+
+        <Card>
+          <CardTitle title="Search Sources" />
+          <ul className="ats-checklist">
+            <li className="pass">Tasks and priorities</li>
+            <li className="pass">Notes and summaries</li>
+            <li className="pass">Goals and roadmap progress</li>
+            <li className="warn">PDF knowledge via RAG assistant</li>
+          </ul>
+        </Card>
+      </section>
+    </div>
+  );
+}
+
+function PdfModule({ forms, handlers, loading, navigate, outputs }) {
+  const pdfUseCases = [
+    ["Resume Review", "Ask questions from uploaded resume or job description."],
+    ["Study Notes", "Summarize long PDF notes into key points and actions."],
+    ["Policy / Docs", "Find exact answers from company, project or course PDFs."]
+  ];
+
+  return (
+    <div className="ai-tools-page page-grid">
+      <section className="tool-hero ai-hero rag-hero">
+        <div>
+          <span>AI Tools</span>
+          <h2>RAG PDF Knowledge Assistant</h2>
+          <p>Paste extracted PDF content, ask a question, and get a document-grounded answer for resumes, notes, job descriptions and study material.</p>
+          <div className="ats-actions">
+            <button onClick={() => navigate("/smart-search")} type="button">Search Workspace</button>
+            <button className="ghost-button" onClick={() => navigate("/ai-assistant")} type="button">Open Assistant</button>
+          </div>
+        </div>
+        <div className="assistant-brain-card">
+          <strong>RAG</strong>
+          <span>document grounded AI</span>
+          <p>Answers from your uploaded PDF context</p>
+        </div>
+      </section>
+
+      <section className="rag-layout">
+        <Card className="wide">
+          <CardTitle title="Ask Your PDF" />
         <form className="stack-form" onSubmit={handlers.askPdf}>
           <input name="title" value={forms.pdf.title} onChange={handlers.changePdf} placeholder="PDF title" />
           <textarea name="content" value={forms.pdf.content} onChange={handlers.changePdf} placeholder="Paste extracted PDF content" />
@@ -1556,8 +1680,31 @@ function PdfModule({ forms, handlers, loading, outputs }) {
           <button disabled={loading}>Ask PDF AI</button>
         </form>
         <List items={[outputs.pdfAnswer].filter(Boolean)} />
-      </Module>
-    </section>
+        </Card>
+
+        <Card>
+          <CardTitle title="Use Cases" />
+          <div className="priority-gap-list">
+            {pdfUseCases.map(([title, copy]) => (
+              <button key={title} onClick={() => navigate("/rag-pdf")} type="button">
+                <strong>{title}</strong>
+                <span>{copy}</span>
+              </button>
+            ))}
+          </div>
+        </Card>
+
+        <Card>
+          <CardTitle title="Answer Quality" />
+          <ul className="ats-checklist">
+            <li className="pass">Ground answer in pasted PDF content</li>
+            <li className="pass">Extract key facts and action items</li>
+            <li className="warn">Ask specific questions for better results</li>
+            <li className="warn">Use enough PDF text for strong context</li>
+          </ul>
+        </Card>
+      </section>
+    </div>
   );
 }
 
