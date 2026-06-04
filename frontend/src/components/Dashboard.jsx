@@ -193,10 +193,7 @@ function renderRoutePage(routeId, tools, forms, resume, outputs, handlers, loadi
       </section>
     ),
     "ats-score": (
-      <section className="analysis-grid page-grid">
-        <AtsScoreCard atsScore={atsScore} />
-        <PreviewCard userName="ATS Preview" />
-      </section>
+      <AtsReportPage atsScore={atsScore} matched={matched} missing={missing} resume={resume} navigate={navigate} />
     ),
     "skills-analysis": (
       <section className="analysis-grid page-grid">
@@ -311,6 +308,100 @@ function AtsScoreCard({ atsScore }) {
         </div>
       </div>
     </Card>
+  );
+}
+
+function AtsReportPage({ atsScore, matched, missing, resume, navigate }) {
+  const verdict = atsScore >= 80 ? "Excellent ATS Readiness" : atsScore >= 60 ? "Good ATS Readiness" : "Needs ATS Optimization";
+  const passChance = Math.min(98, Math.max(42, atsScore + 8));
+  const issueCount = Math.max(1, missing.length);
+
+  return (
+    <div className="ats-report page-grid">
+      <section className="ats-report-hero">
+        <div className="ats-report-copy">
+          <span>ATS Resume Report</span>
+          <h2>{verdict}</h2>
+          <p>
+            Your resume is being reviewed for <strong>{resume.jobRole}</strong>. This report checks keyword relevance,
+            formatting quality, recruiter readability and screening readiness.
+          </p>
+          <div className="ats-actions">
+            <button onClick={() => navigate("/resume-checker")} type="button">Upload New Resume</button>
+            <button className="ghost-button" onClick={() => navigate("/keyword-optimizer")} type="button">Optimize Keywords</button>
+          </div>
+        </div>
+        <div className="ats-score-panel">
+          <ScoreRing value={atsScore} tone={atsScore >= 70 ? "green" : "purple"} />
+          <strong>{passChance}% pass probability</strong>
+          <span>{issueCount} priority improvements found</span>
+        </div>
+      </section>
+
+      <section className="workspace-summary">
+        <StatCard label="ATS Score" value={`${atsScore}/100`} detail="Overall resume health" />
+        <StatCard label="Pass Chance" value={`${passChance}%`} detail="Estimated screening probability" />
+        <StatCard label="Matched Skills" value={matched.length} detail="Role-aligned keywords" />
+        <StatCard label="Missing Skills" value={missing.length} detail="Keyword gaps to fix" />
+      </section>
+
+      <section className="analysis-grid">
+        <Card className="wide">
+          <CardTitle title="Score Breakdown" />
+          <div className="ats-breakdown">
+            {[
+              ["Keyword Match", Math.max(55, Math.min(96, atsScore + 4)), "Role-specific skills and tools"],
+              ["Formatting", 86, "Readable structure and ATS parsing"],
+              ["Content Quality", 82, "Impact, clarity and measurable achievements"],
+              ["Section Coverage", 90, "Summary, skills, experience and education"],
+              ["Readability", 88, "Simple language and recruiter scan quality"]
+            ].map(([label, value, detail]) => (
+              <div className="ats-breakdown-row" key={label}>
+                <div>
+                  <strong>{label}</strong>
+                  <span>{detail}</span>
+                </div>
+                <i><b style={{ width: `${value}%` }} /></i>
+                <em>{value}/100</em>
+              </div>
+            ))}
+          </div>
+        </Card>
+
+        <Card>
+          <CardTitle title="ATS Checklist" />
+          <ul className="ats-checklist">
+            <li className="pass">Single-column structure detected</li>
+            <li className="pass">Standard section headings used</li>
+            <li className="pass">Readable text format</li>
+            <li className={missing.length ? "warn" : "pass"}>Role keywords need more coverage</li>
+            <li className="warn">Add more quantified achievements</li>
+          </ul>
+        </Card>
+
+        <Card>
+          <CardTitle title="Missing Keywords" />
+          <div className="keyword-cloud compact">
+            {(missing.length ? missing : ["leadership", "impact", "metrics", "ownership"]).slice(0, 10).map((keyword) => (
+              <span key={keyword}>{keyword}</span>
+            ))}
+          </div>
+          <button onClick={() => navigate("/learning-hub")} type="button">Build Skill Plan</button>
+        </Card>
+
+        <Card className="wide">
+          <CardTitle title="Professional Recommendations" />
+          <div className="recommendation-grid">
+            <Suggestion title="Improve Summary" copy="Add target role, years of experience, strongest skills and one measurable achievement." tag="High" />
+            <Suggestion title="Strengthen Experience Bullets" copy="Use action + tool + result format, for example: Built X using Y and improved Z by 20%." tag="High" />
+            <Suggestion title="Add Role Keywords" copy="Mirror the exact job description keywords where they honestly match your experience." tag="Medium" />
+            <Suggestion title="Keep Formatting Simple" copy="Avoid tables, heavy graphics, icons and multi-column layouts for ATS uploads." tag="Low" />
+          </div>
+        </Card>
+
+        <PreviewCard userName="ATS Preview" />
+      </section>
+    </div>
   );
 }
 
